@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
@@ -21,7 +22,7 @@ class GoogleController extends Controller
             'name' => $googleUser->name,
             'email' => $googleUser->email,
             'github_token' => $googleUser->token,
-            'github_refresh_token' => $googleUser->refreshToken,
+            'password' => Hash::make('password@Password!'),
         ]);
 
         Auth::login($user);
