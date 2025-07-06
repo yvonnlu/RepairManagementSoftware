@@ -9,3 +9,7 @@ Route::get('admin/dashboard', function () {
 Route::get('admin/customerlist', function () {
     return view('admin.pages.customer_management.list');
 })->name('admin.customerlist');
+
+Route::get('admin/servicelist', function () {
+    return view('admin.pages.service_management.list');
+})->name('admin.servicelist');
