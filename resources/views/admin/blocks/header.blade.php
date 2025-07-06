@@ -1,5 +1,3 @@
-@props(['isAdmin' => false])
-
 @php
 $notifications = [
 [
@@ -31,7 +29,6 @@ $notifications = [
 'unread' => false
 ]
 ];
-
 $unreadCount = collect($notifications)->where('unread', true)->count();
 @endphp
 
@@ -71,7 +68,6 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
         },
         
         markAllRead() {
-            // AJAX call to mark all notifications as read
             fetch('#', {
                 method: 'POST',
                 headers: {
@@ -84,7 +80,6 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
         },
         
         markAsRead(notificationId) {
-            // AJAX call to mark specific notification as read
             fetch(`#`, {
                 method: 'POST',
                 headers: {
@@ -228,16 +223,6 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
                 </div>
             </div>
 
-            <!-- Mode Switch - Hidden on mobile -->
-            <form action="" method="POST" class="hidden lg:inline">
-                @csrf
-                <button
-                    type="submit"
-                    class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors">
-                    {{ $isAdmin ? 'Customer View' : 'Admin Panel' }}
-                </button>
-            </form>
-
             <!-- Profile Dropdown -->
             <div class="relative">
                 <button
@@ -251,10 +236,10 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
                     </div>
                     <div class="text-left hidden lg:block">
                         <span class="text-sm font-medium text-gray-700 block">
-                            {{ $isAdmin ? 'Admin User' : (auth()->user()->name ?? 'John Smith') }}
+                            {{ auth()->user()->name ?? 'Admin User' }}
                         </span>
                         <span class="text-xs text-gray-500">
-                            {{ $isAdmin ? 'Administrator' : 'Customer' }}
+                            Administrator
                         </span>
                     </div>
                 </button>

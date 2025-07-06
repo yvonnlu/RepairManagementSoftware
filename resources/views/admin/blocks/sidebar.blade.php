@@ -1,7 +1,5 @@
-@props(['isAdmin' => false])
-
 @php
-$adminMenuItems = [
+$menuItems = [
 [
 'id' => 'dashboard',
 'label' => 'Dashboard',
@@ -51,35 +49,6 @@ $adminMenuItems = [
 'route' => 'reports.index'
 ]
 ];
-
-$customerMenuItems = [
-[
-'id' => 'profile',
-'label' => 'Profile',
-'icon' => 'user',
-'route' => 'profile.show'
-],
-[
-'id' => 'book-service',
-'label' => 'Book Service',
-'icon' => 'package',
-'route' => 'services.book'
-],
-[
-'id' => 'payment',
-'label' => 'Payment',
-'icon' => 'credit-card',
-'route' => 'payments.index'
-],
-[
-'id' => 'track-order',
-'label' => 'Track Orders',
-'icon' => 'clock',
-'route' => 'orders.track'
-]
-];
-
-$menuItems = $isAdmin ? $adminMenuItems : $customerMenuItems;
 $currentRoute = request()->route()->getName();
 @endphp
 
@@ -106,7 +75,7 @@ $currentRoute = request()->route()->getName();
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-gray-800">RepairPro</h1>
-                    <p class="text-sm text-gray-600">{{ $isAdmin ? 'Admin Panel' : 'Customer Portal' }}</p>
+                    <p class="text-sm text-gray-600">Admin Panel</p>
                 </div>
             </div>
             <!-- Close button for mobile -->
