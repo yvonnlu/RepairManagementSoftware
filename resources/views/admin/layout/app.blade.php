@@ -12,7 +12,7 @@
 
 <body class="bg-gray-100">
     @include('admin.blocks.header')
-    @include('admin.blocks.sidebar', ['isAdmin' => true])
+    @include('admin.blocks.sidebar')
 
     <!-- Main Content -->
     <div class="min-h-screen">
