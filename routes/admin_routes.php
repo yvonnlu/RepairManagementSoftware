@@ -21,3 +21,8 @@ Route::get('admin/orderlist', function () {
 Route::get('admin/technicianlist', function () {
     return view('admin.pages.technician_management.list');
 })->name('admin.technicianlist');
+
+
+Route::get('admin/inventorylist', function () {
+    return view('admin.pages.inventory_management.list');
+})->name('admin.inventorylist');
