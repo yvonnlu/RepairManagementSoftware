@@ -13,3 +13,7 @@ Route::get('admin/customerlist', function () {
 Route::get('admin/servicelist', function () {
     return view('admin.pages.service_management.list');
 })->name('admin.servicelist');
+
+Route::get('admin/orderlist', function () {
+    return view('admin.pages.order_management.list');
+})->name('admin.orderlist');

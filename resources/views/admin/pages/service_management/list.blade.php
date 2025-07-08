@@ -96,7 +96,7 @@
             
                     <select name="category" 
                     onchange="this.form.submit()"
-                    class="px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    class="px-4 py-2 pr-14 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="">All Categories</option>
                 <option value="Repair" {{ request('category') === 'Repair' ? 'selected' : '' }}>Repair</option>
                 <option value="Replacement" {{ request('category') === 'Replacement' ? 'selected' : '' }}>Replacement</option>
