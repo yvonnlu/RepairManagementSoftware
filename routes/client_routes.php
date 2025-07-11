@@ -18,6 +18,10 @@ Route::get('/client/bookservice', function () {
 Route::get('/client/payment', function () {
     return view('client.pages.payment');
 })->name('client.payment');
+
+Route::get('/client/trackorder', function () {
+    return view('client.pages.trackorder');
+})->name('client.trackorder');
 ?>
 
 
