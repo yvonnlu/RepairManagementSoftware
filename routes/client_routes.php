@@ -14,6 +14,10 @@ Route::get('/client/profile', function () {
 Route::get('/client/bookservice', function () {
     return view('client.pages.bookservice');
 })->name('client.bookservice');
+
+Route::get('/client/payment', function () {
+    return view('client.pages.payment');
+})->name('client.payment');
 ?>
 
 
