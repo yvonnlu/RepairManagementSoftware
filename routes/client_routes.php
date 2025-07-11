@@ -10,6 +10,10 @@ Route::get('google/callback', [GoogleController::class, 'callback'])->name('clie
 Route::get('/client/profile', function () {
     return view('client.pages.profile');
 })->name('client.profile');
+
+Route::get('/client/bookservice', function () {
+    return view('client.pages.bookservice');
+})->name('client.bookservice');
 ?>
 
 
