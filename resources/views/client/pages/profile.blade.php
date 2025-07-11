@@ -1,56 +1,66 @@
 @extends('client.layout.app')
 
 @section('content')
-// routes/web.php
-Route::get('/profile', function () {
-    $user = (object)[
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'phone' => '123-456-7890',
-        'address' => '123 Example Street, HCMC',
-        'created_at' => now()->subYears(2),
-    ];
+@php
+$user = (object)[
+    'name' => 'John Doe',
+    'email' => 'john@example.com',
+    'phone' => '123-456-7890',
+    'address' => '123 Example Street, HCMC',
+    'created_at' => now()->subYears(2),
+];
 
-    $stats = [
-        'total_orders' => 42,
-        'completed_orders' => 39,
-        'average_rating' => 4.7,
-    ];
+$stats = [
+    'total_orders' => 42,
+    'completed_orders' => 39,
+    'average_rating' => 4.7,
+];
 
-    $recentOrders = collect([
-        (object)[
-            'id' => 1,
-            'device_model' => 'iPhone 13',
-            'services' => collect([(object)['name' => 'Screen Replacement'], (object)['name' => 'Battery Replacement']]),
-            'status' => 'completed',
-            'created_at' => now()->subDays(2),
-            'total_amount' => 199.99
-        ],
-        // ...
-    ]);
-
-    return view('client.profile', compact('user', 'stats', 'recentOrders'));
-});
-
-
+$recentOrders = collect([
+    (object)[
+        'id' => 1,
+        'device_model' => 'iPhone 13',
+        'services' => collect([(object)['name' => 'Screen Replacement'], (object)['name' => 'Battery Replacement']]),
+        'status' => 'completed',
+        'created_at' => now()->subDays(2),
+        'total_amount' => 199.99
+    ],
+    (object)[
+        'id' => 2,
+        'device_model' => 'Samsung Galaxy S21',
+        'services' => collect([(object)['name' => 'Water Damage Repair']]),
+        'status' => 'in_progress',
+        'created_at' => now()->subDays(5),
+        'total_amount' => 149.99
+    ],
+    (object)[
+        'id' => 3,
+        'device_model' => 'MacBook Pro',
+        'services' => collect([(object)['name' => 'Keyboard Replacement']]),
+        'status' => 'pending',
+        'created_at' => now()->subDays(1),
+        'total_amount' => 299.99
+    ]
+]);
+@endphp
 <div class="space-y-6" x-data="profileManager()">
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-900">Personal Profile</h1>
         <div x-show="!isEditing">
-            <button @click="startEditing()" 
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
+            <button @click="startEditing()"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
                 {{-- @include('components.icons.edit') --}}
                 <span>Edit</span>
             </button>
         </div>
         <div x-show="isEditing" class="flex items-center space-x-2">
-            <button @click="saveProfile()" 
-                    class="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors">
+            <button @click="saveProfile()"
+                class="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors">
                 {{-- @include('components.icons.save') --}}
                 <span>Save</span>
             </button>
-            <button @click="cancelEditing()" 
-                    class="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700 transition-colors">
+            <button @click="cancelEditing()"
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700 transition-colors">
                 {{-- @include('components.icons.x') --}}
                 <span>Cancel</span>
             </button>
@@ -82,10 +92,10 @@ Route::get('/profile', function () {
                                 {{-- @include('components.icons.phone', ['class' => 'w-5 h-5 text-gray-500']) --}}
                                 <div class="flex-1">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                                    <input x-show="isEditing" 
-                                           type="tel" 
-                                           x-model="profile.phone"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input x-show="isEditing"
+                                        type="tel"
+                                        x-model="profile.phone"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <p x-show="!isEditing" class="text-gray-900" x-text="profile.phone"></p>
                                 </div>
                             </div>
@@ -94,10 +104,10 @@ Route::get('/profile', function () {
                                 {{-- @include('components.icons.mail', ['class' => 'w-5 h-5 text-gray-500']) --}}
                                 <div class="flex-1">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                    <input x-show="isEditing" 
-                                           type="email" 
-                                           x-model="profile.email"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input x-show="isEditing"
+                                        type="email"
+                                        x-model="profile.email"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <p x-show="!isEditing" class="text-gray-900" x-text="profile.email"></p>
                                 </div>
                             </div>
@@ -108,10 +118,10 @@ Route::get('/profile', function () {
                                 {{-- @include('components.icons.map-pin', ['class' => 'w-5 h-5 text-gray-500 mt-1']) --}}
                                 <div class="flex-1">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                                    <textarea x-show="isEditing" 
-                                              x-model="profile.address"
-                                              rows="3"
-                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                    <textarea x-show="isEditing"
+                                        x-model="profile.address"
+                                        rows="3"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                                     <p x-show="!isEditing" class="text-gray-900" x-text="profile.address"></p>
                                 </div>
                             </div>
@@ -220,50 +230,54 @@ Route::get('/profile', function () {
 </div>
 
 <script>
-function profileManager() {
-    return {
-        isEditing: false,
-        profile: {
-            phone: '{{ $user->phone ?? '' }}',
-            email: '{{ $user->email }}',
-            address: '{{ $user->address ?? '' }}'
-        },
-        originalProfile: {},
+    function profileManager() {
+        return {
+            isEditing: false,
+            profile: {
+                phone: '{{ $user->phone ?? "" }}',
+                email: '{{ $user->email ?? "" }}',
+                address: '{{ $user->address ?? "" }}'
+            },
+            originalProfile: {},
 
-        startEditing() {
-            this.isEditing = true;
-            this.originalProfile = { ...this.profile };
-        },
+            startEditing() {
+                this.isEditing = true;
+                this.originalProfile = {
+                    ...this.profile
+                };
+            },
 
-        cancelEditing() {
-            this.isEditing = false;
-            this.profile = { ...this.originalProfile };
-        },
+            cancelEditing() {
+                this.isEditing = false;
+                this.profile = {
+                    ...this.originalProfile
+                };
+            },
 
-        async saveProfile() {
-            try {
-                const response = await fetch('', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify(this.profile)
-                });
+            async saveProfile() {
+                try {
+                    const response = await fetch('', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify(this.profile)
+                    });
 
-                if (response.ok) {
-                    this.isEditing = false;
-                    // Show success message
-                    alert('Profile updated successfully!');
-                } else {
-                    throw new Error('Failed to update profile');
+                    if (response.ok) {
+                        this.isEditing = false;
+                        // Show success message
+                        alert('Profile updated successfully!');
+                    } else {
+                        throw new Error('Failed to update profile');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    alert('Error updating profile. Please try again.');
                 }
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile. Please try again.');
             }
         }
     }
-}
 </script>
 @endsection
