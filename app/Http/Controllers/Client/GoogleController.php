@@ -18,15 +18,26 @@ class GoogleController extends Controller
     public function callback(){
         $googleUser = Socialite::driver('google')->user();
 
-        $user = User::create([
-            'name' => $googleUser->name,
-            'email' => $googleUser->email,
-            'github_token' => $googleUser->token,
-            'password' => Hash::make('password@Password!'),
-        ]);
+        // eloquent
+        $user=  User::where('google_user_id',$googleUser->id)->first();
+    //    dd($user);
+        if(!$user){
+            $user = User::create([
+                'name' => $googleUser->name,
+                'email' => $googleUser->email,
+                'github_token' => $googleUser->token,
+                'password' => Hash::make('password@Password!'),
+                'google_user_id' => $googleUser->id
+            ]);
+        }
+        else{
+            $user->name=$googleUser->name;
+            $user->save();
+        }
+       
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect(route('client.profile',absolute:false));
     }
 }

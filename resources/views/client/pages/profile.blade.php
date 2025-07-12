@@ -131,7 +131,7 @@ $recentOrders = collect([
             </div>
         </div>
 
-        <!-- Stats -->
+        {{-- <!-- Stats -->
         <div class="space-y-6">
             <div class="bg-white rounded-lg shadow-sm border p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
@@ -165,9 +165,9 @@ $recentOrders = collect([
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <!-- Recent Orders -->
+    {{-- <!-- Recent Orders -->
     <div class="bg-white rounded-lg shadow-sm border">
         <div class="p-6 border-b">
             <div class="flex items-center justify-between">
@@ -227,7 +227,7 @@ $recentOrders = collect([
             </table>
         </div>
     </div>
-</div>
+</div> --}}
 
 <script>
     function profileManager() {
