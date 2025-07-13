@@ -3,58 +3,6 @@
 @section('title', 'Service Management')
 
 @section('content')
-@php
-    $categories = $categories ?? ['Laptop', 'Phone', 'Tablet'];
-    $deviceTypes = $deviceTypes ?? ['iOS', 'Android', 'Windows'];
-    $services = $services ?? collect([
-    (object)[
-        'id' => 1,
-        'name' => 'Screen Replacement',
-        'category' => 'Display Repair',
-        'device_type' => 'smartphone, tablet',
-        'price' => 200.00,
-        'estimated_time' => '2h',
-        'is_active' => true,
-        'description' => 'Complete screen assembly replacement including LCD/OLED and digitizer'
-    ],
-    (object)[
-        'id' => 2,
-        'name' => 'Battery Replacement',
-        'category' => 'Power System',
-        'device_type' => 'smartphone, tablet, laptop',
-        'price' => 110.00,
-        'estimated_time' => '1h',
-        'is_active' => true,
-        'description' => 'Replace worn-out battery with genuine or high-quality compatible battery'
-    ],
-    (object)[
-        'id' => 3,
-        'name' => 'Water Damage Restoration',
-        'category' => 'Liquid Damage',
-        'device_type' => 'smartphone, tablet, laptop',
-        'price' => 200.00,
-        'estimated_time' => '4h',
-        'is_active' => true,
-        'description' => 'Complete liquid damage assessment and restoration service'
-    ],
-    (object)[
-        'id' => 4,
-        'name' => 'Motherboard Repair',
-        'category' => 'Logic Board',
-        'device_type' => 'smartphone, tablet, laptop',
-        'price' => 350.00,
-        'estimated_time' => '8h',
-        'is_active' => false,
-        'description' => 'Advanced motherboard component-level repair and reballing'
-    ],
-]);
-
-    $categoryStats = $categoryStats ?? [
-        'Repair' => ['total' => 5, 'active' => 3],
-        'Replacement' => ['total' => 8, 'active' => 6],
-        'Maintenance' => ['total' => 2, 'active' => 1],
-    ];
-@endphp
 
 <div class="space-y-6" x-data="serviceManagement()">
     <!-- Header -->
@@ -111,7 +59,7 @@
 
     <!-- Service Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @forelse($services as $service)
+        @forelse($datas as $data)
             <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -120,36 +68,21 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                             </svg>
-                            <span class="text-sm font-medium text-blue-600">{{ $service->category }}</span>
+                            <span class="text-sm font-medium text-blue-600">{{ $data->device_type_name }}</span>
                         </div>
-                        <button 
-                            @click="toggleServiceStatus({{ $service->id }})"
-                            class="{{ $service->is_active ? 'text-green-600' : 'text-gray-400' }} hover:scale-110 transition-transform">
-                            @if($service->is_active)
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                                </svg>
-                            @else
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.7m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17.294 15M10 14l4.724-2.013a1.998 1.998 0 011.789 2.894l-3.5 7A2 2 0 0111.264 21h-4.017a2 2 0 01-.485-.06l-3.76-.7"></path>
-                                </svg>
-                            @endif
-                        </button>
                     </div>
 
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $service->name }}</h3>
-                    <p class="text-sm text-gray-600 mb-4">{{ $service->description }}</p>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $data->issue_category_name }}</h3>
+                    <p class="text-sm text-gray-600 mb-4">{{ $data->description  }}</p>
 
                     <div class="space-y-2 mb-4">
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-500">Device:</span>
-                            <span class="text-sm font-medium">{{ $service->device_type }}</span>
+                            <span class="text-sm font-medium">{{ $data->device_type_name }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-500">Price:</span>
-                            <span class="text-sm font-medium text-green-600">${{ number_format($service->price, 2) }}</span>
+                            <span class="text-sm font-medium text-green-600">${{ number_format($data->base_price, 2) }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-500">Duration:</span>
@@ -158,35 +91,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span class="text-sm font-medium">{{ $service->estimated_time }}</span>
+                                <span class="text-sm font-medium">2-3 days</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $service->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                {{ $service->is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <a href="" 
-                               class="text-blue-600 hover:text-blue-800 transition-colors"
-                               title="Edit Service">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </a>
-                            <button 
-                                @click="deleteService({{ $service->id }}, '{{ $service->name }}')"
-                                class="text-red-600 hover:text-red-800 transition-colors"
-                                title="Delete Service">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -221,7 +127,7 @@
 
 
     <!-- Service Categories Summary -->
-    <div class="bg-white rounded-lg shadow-sm border p-6">
+     {{-- <div class="bg-white rounded-lg shadow-sm border p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Category Overview</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($categoryStats as $category => $stats)
@@ -232,7 +138,7 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> --}}
     
 
     <!-- Delete Confirmation Modal -->
@@ -329,4 +235,4 @@ function serviceManagement() {
     }
 }
 </script>
-@endsection
+@endsection 
