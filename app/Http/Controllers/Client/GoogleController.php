@@ -11,17 +11,19 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
- public function redirect(){
+    public function redirect()
+    {
         return Socialite::driver('google')->redirect();
-    }  
-    
-    public function callback(){
+    }
+
+    public function callback()
+    {
         $googleUser = Socialite::driver('google')->user();
 
         // eloquent
-        $user=  User::where('google_user_id',$googleUser->id)->first();
-    //    dd($user);
-        if(!$user){
+        $user =  User::where('google_user_id', $googleUser->id)->first();
+        //    dd($user);
+        if (!$user) {
             $user = User::create([
                 'name' => $googleUser->name,
                 'email' => $googleUser->email,
@@ -29,15 +31,18 @@ class GoogleController extends Controller
                 'password' => Hash::make('password@Password!'),
                 'google_user_id' => $googleUser->id
             ]);
-        }
-        else{
-            $user->name=$googleUser->name;
+        } else {
+            $user->name = $googleUser->name;
             $user->save();
         }
-       
+
 
         Auth::login($user);
 
-        return redirect(route('client.profile',absolute:false));
+        if ($user->role === 1) {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('client.profile');
+        }
     }
 }
