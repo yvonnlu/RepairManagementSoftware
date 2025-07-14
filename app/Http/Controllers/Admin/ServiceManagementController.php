@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+
+use App\Models\admin\DeviceTypeIssueCategory;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,5 +28,11 @@ class ServiceManagementController extends Controller
 
 
         return view('admin.pages.service_management.list', ['datas' => $datas]);
+    }
+
+
+    public function detail(DeviceTypeIssueCategory $serviceList)
+    {
+        return view('admin.pages.service_management.detail')->with('data', $serviceList);
     }
 }

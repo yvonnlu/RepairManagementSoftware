@@ -20,6 +20,11 @@ Route::prefix('admin/service_management')
     ->middleware(CheckIsAdmin::class) // optional: add 'web' if outside web.php
     ->group(function () {
         Route::get('list', 'serviceindex')->name('list');
+
+
+        Route::get('detail/{serviceList}', 'detail')->name('detail');
+
+
         // Bạn có thể thêm các route khác tại đây, ví dụ:
         // Route::get('create', 'create')->name('create');
         // Route::post('store', 'store')->name('store');
@@ -28,13 +33,13 @@ Route::prefix('admin/service_management')
 
 Route::get('admin/orderlist', function () {
     return view('admin.pages.order_management.list');
-})->name('admin.orderlist')->middleware(CheckIsAdmin::class);;
+})->name('admin.orderlist')->middleware(CheckIsAdmin::class);
 
 Route::get('admin/technicianlist', function () {
     return view('admin.pages.technician_management.list');
-})->name('admin.technicianlist')->middleware(CheckIsAdmin::class);;
+})->name('admin.technicianlist')->middleware(CheckIsAdmin::class);
 
 
 Route::get('admin/inventorylist', function () {
     return view('admin.pages.inventory_management.list');
-})->name('admin.inventorylist')->middleware(CheckIsAdmin::class);;
+})->name('admin.inventorylist')->middleware(CheckIsAdmin::class);
