@@ -263,6 +263,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 rounded-lg {{ $stat['bg'] }} flex items-center justify-center">
                         {{-- @include('components.icons.' . $stat['icon'], ['class' => 'w-6 h-6 ' . $stat['color']]) --}}
+                        <i data-lucide="{{ $stat['icon'] }}" class="w-5 h-5 {{ $stat['color'] }}"></i>
                     </div>
                     <div class="flex items-center space-x-1 text-sm {{ $stat['trend'] === 'up' ? 'text-green-600' : 'text-red-600' }}">
                         @if($stat['trend'] === 'up')
@@ -478,4 +479,10 @@
         </div>
     </div>
 </div>
+<script>
+    lucide.createIcons();
+</script>
+
 @endsection
+
+

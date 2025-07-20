@@ -3,7 +3,7 @@
 @section('title', 'Book Repair Service')
 
 @section('content')
-@section('content')
+
 @php
 $user = (object)[
 'name' => 'John Doe',

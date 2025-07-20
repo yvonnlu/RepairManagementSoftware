@@ -23,6 +23,10 @@ Route::get('/client/payment', function () {
 Route::get('/client/trackorder', function () {
     return view('client.pages.trackorder');
 })->name('client.trackorder')->middleware(CheckIsClient::class);
+
+
+
+
 ?>
 
 
