@@ -110,7 +110,7 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
 
         <!-- Search Section -->
         <div class="flex items-center space-x-4 flex-1 lg:flex-none">
-            <div class="relative w-full lg:w-auto">
+            {{-- <div class="relative w-full lg:w-auto">
                 <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -125,7 +125,7 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
                         class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full lg:w-96 bg-gray-50 focus:bg-white transition-colors"
                         value="{{ request('q') }}" />
                 </form>
-            </div>
+            </div> --}}
         </div>
 
         <div class="flex items-center space-x-2 lg:space-x-4">

@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Service Detail')
+@section('title', 'Create Service')
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br py-8 px-4">
@@ -14,8 +14,8 @@
                     </svg>
                     <span class="text-sm font-medium">Back to Services</span>
                 </a>
-                <h1 class="text-3xl font-bold text-slate-900 mb-2">Service Detail</h1>
-                <p class="text-slate-600">Manage and update service information</p>
+                <h1 class="text-3xl font-bold text-slate-900 mb-2">Create New Service</h1>
+                <p class="text-slate-600">Fill in the details to create a new service</p>
             </div>
 
             {{-- Main Content Card --}}
@@ -23,7 +23,7 @@
                 {{-- Card Header --}}
                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
                     <h2 class="text-xl font-semibold text-white">Service Configuration</h2>
-                    <p class="text-blue-100 mt-1">Update pricing and service details</p>
+                    <p class="text-blue-100 mt-1">Define pricing, features, and service details</p>
                 </div>
 
                 {{-- Notifications --}}
@@ -32,7 +32,7 @@
                         <svg class="text-emerald-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />
                         </svg>
-                        <span class="text-emerald-700 font-medium">Service updated successfully!</span>
+                        <span class="text-emerald-700 font-medium">Service created successfully!</span>
                     </div>
                 @endif
                 @if ($errors->any())
@@ -53,13 +53,12 @@
                 @endif
 
                 {{-- Form --}}
-                <form method="POST" action="{{route('admin.service.update',['service'=>$service->id])}}" class="p-8 space-y-8">
+                <form method="POST" action="{{ route('admin.service.store') }}" class="p-8 space-y-8">
                     @csrf
-                 
-                  
                     {{-- Device Type Field --}}
                     <div class="space-y-3">
-                        <label class="flex items-center gap-2 text-slate-700 font-semibold">
+                        <label class="flex items-center gap-2 text-slate-700 font-sem
+                        bold">
                             <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -67,14 +66,16 @@
                             Device Type
                         </label>
                         <div class="relative">
-                            <input type="text" name="device_type_name" value="{{$service->device_type_name}}"
+                            <input type="text" name="device_type_name" value="{{ old('device_type_name') }}"
                                 class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 font-medium"
                                 placeholder="Enter device type name">
-                                @error('device_type_name')
+                            @error('device_type_name')
                                 <div class="text-red-500">{{ $message }}</div>
                             @enderror
+
                         </div>
                     </div>
+
                     {{-- Issue Category Field --}}
                     <div class="space-y-3">
                         <label class="flex items-center gap-2 text-slate-700 font-semibold">
@@ -86,10 +87,10 @@
                         </label>
                         <div class="relative">
 
-                            <input type="text" name="issue_category_name" value="{{$service->issue_category_name}}"
+                            <input type="text" name="issue_category_name" value="{{ old('issue_category_name') }}"
                                 class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 font-medium"
                                 placeholder="Enter issue name">
-                                @error('issue_category_name')
+                            @error('issue_category_name')
                                 <div class="text-red-500">{{ $message }}</div>
                             @enderror
                         </div>
@@ -105,10 +106,10 @@
                             Base Price
                         </label>
                         <div class="relative">
-                            <input type="number" step="0.01" name="base_price" value="{{$service->base_price}}"
+                            <input type="number" step="0.01" name="base_price" value="{{ old('base_price') }}"
                                 class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 font-medium"
                                 placeholder="Enter base price">
-                                @error('base_price')
+                            @error('base_price')
                                 <div class="text-red-500">{{ $message }}</div>
                             @enderror
                         </div>
@@ -126,13 +127,13 @@
                         </label>
                         <textarea id="description" name="description"
                             class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 min-h-[120px] resize-none"
-                            placeholder="Enter service description..." rows="4">{{$service->description}}</textarea>
+                            placeholder="Enter service description..." rows="4">{{ old('description') }}</textarea>
                             @error('description')
                             <div class="text-red-500">{{ $message }}</div>
                         @enderror
                             <div class="flex justify-between text-sm text-slate-500 mt-1">
                                 <span>Provide detailed information about this service</span>
-                                <span><span id="char-count">{{ strlen($service->description) }}</span>/1000</span>
+                                <span><span id="char-count">{{ strlen(old('description', '')) }}</span>/1000</span>
                             </div>
                     </div>
 
@@ -144,7 +145,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
-                            Update Service
+                            Create Service
                         </button>
                     </div>
                 </form>

@@ -4,14 +4,11 @@ namespace App\Models\admin;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceTypeIssueCategory extends Model
+class Services extends Model
 {
-    protected $table = 'device_type_issue_category';
+    protected $table = 'services';
 
     public $timestamps = true;
 
-    // public $fillable = [];
-
     public $guarded = [];
-    
 }
