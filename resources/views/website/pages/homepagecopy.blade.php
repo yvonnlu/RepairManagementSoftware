@@ -1,4 +1,4 @@
-@extends('homepage.layout.app')
+@extends('website.layout.app')
 
 @section('content')
 

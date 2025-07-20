@@ -1,4 +1,4 @@
-@extends('homepage.layout.app')
+@extends('website.layout.app')
 
 @section('content')
 
@@ -185,98 +185,204 @@
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section id="services" class="py-20 bg-white">
+
+        <!-- Services Overview Section -->
+        <section id="services" class="py-20 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Professional Repair Services</h2>
-                    <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                        We provide comprehensive repair services for all types of electronic devices with the latest
-                        technology
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        Professional Electronics Repair Services
+                    </h2>
+                    <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                        We specialize in comprehensive electronics repair services using cutting-edge diagnostic technology,
+                        genuine replacement parts, and expert craftsmanship. From everyday devices to specialized equipment,
+                        our certified technicians deliver reliable solutions with industry-leading warranties.
                     </p>
-
-                    <!-- Category Filter -->
-                    <div class="flex flex-wrap justify-center gap-4 mb-12">
-                        <a href="{{ route('home.index') }}"
-                            class="category-filter px-6 py-3 rounded-full font-medium transition-all duration-300 {{ empty($selectedType) ? 'bg-blue-600 text-white shadow-lg scale-105' : 'bg-gray-100 text-gray-600' }}">
-                            All
-                        </a>
-                        @foreach ($deviceTypes as $device)
-                        @php $slug = Str::slug($device->device_type_name); @endphp
-                        <a href="{{ route('home.index', ['device_type' => $slug]) }}"
-                            class="category-filter px-6 py-3 rounded-full font-medium transition-all duration-300 {{ $selectedType == $slug ? 'bg-blue-600 text-white shadow-lg scale-105' : 'bg-gray-100 text-gray-600' }}">
-                            {{ $device->device_type_name }}
-                        </a>
-                        @endforeach
-                    </div>
-
                 </div>
 
-                <!-- Service Categories -->
-                <div class="space-y-16">
-                    @foreach ($services as $service)
-                    <div
-                        class="service-category {{ Str::slug($service->device_type_name) }} bg-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-white">
-                            <div class="flex items-center space-x-4 mb-4">
-                                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i data-lucide="smartphone" class="w-8 h-8"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl md:text-3xl font-bold">{{ $service->device_type_name }}
-                                    </h3>
-                                    <p class="text-lg opacity-90">Professional iPhone & Android repair services</p>
-                                </div>
+                <!-- Service Highlights -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <!-- Mobile Device Repair -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="smartphone" class="w-8 h-8 text-white"></i>
                             </div>
-                        </div>
-
-                        <div class="p-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 group cursor-pointer transform hover:scale-105"
-                                    onclick="openServiceModal('screen-replacement')">
-                                    <div class="flex items-start justify-between mb-4">
-                                        <div class="flex-1">
-                                            <div class="flex items-center space-x-2 mb-2">
-                                                <h4
-                                                    class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                                    {{ $service->issue_category_name }}
-                                                </h4>
-                                            </div>
-                                        </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Mobile Device Repair
+                                    </h3>
+                                    <div class="text-right">
+                                        <div class="text-sm font-medium text-gray-500">25,000+ repaired</div>
+                                        <div class="text-sm font-bold text-green-600">4.9/5</div>
                                     </div>
-
-                                    <div class="space-y-3 mb-6">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-gray-600">Price:</span>
-                                            <span
-                                                class="text-xl font-bold text-green-600">{{ $service->base_price }}</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-gray-600">Time:</span>
-                                            <div class="flex items-center space-x-1">
-                                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                                                <span class="text-gray-900">2-3 days</span>
-                                            </div>
-                                        </div>
+                                </div>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Expert repair for smartphones and tablets with genuine parts, fast turnaround times, and comprehensive warranty coverage for all repairs.
+                                </p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Screen replacement</span>
                                     </div>
-
-                                    <button
-                                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 group-hover:from-blue-700 group-hover:to-purple-700">
-                                        <span>View Details</span>
-                                        <i data-lucide="arrow-right"
-                                            class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                                    </button>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Battery replacement</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Water damage repair</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Camera & speaker fixes</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @endforeach
+
+                    <!-- Computer & Laptop Repair -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="laptop" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Computer & Laptop Repair
+                                    </h3>
+                                    <div class="text-right">
+                                        <div class="text-sm font-medium text-gray-500">15,000+ repaired</div>
+                                        <div class="text-sm font-bold text-green-600">4.8/5</div>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Professional computer repair services for all brands and operating systems, from basic troubleshooting to complex motherboard repairs.
+                                </p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Hardware diagnostics</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Software troubleshooting</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Performance optimization</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Data recovery</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gaming & Desktop Systems -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="monitor" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Gaming & Desktop Systems
+                                    </h3>
+                                    <div class="text-right">
+                                        <div class="text-sm font-medium text-gray-500">8,000+ repaired</div>
+                                        <div class="text-sm font-bold text-green-600">4.9/5</div>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Specialized repair and upgrade services for gaming PCs and workstations, ensuring optimal performance for demanding applications.
+                                </p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Graphics card repair</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>System upgrades</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Custom builds</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Cooling solutions</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wearable Technology -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        <div class="flex items-start space-x-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="watch" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Wearable Technology
+                                    </h3>
+                                    <div class="text-right">
+                                        <div class="text-sm font-medium text-gray-500">3,000+ repaired</div>
+                                        <div class="text-sm font-bold text-green-600">4.7/5</div>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Expert repair services for smartwatches and other wearable devices, restoring functionality and water resistance.
+                                </p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Screen replacement</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Battery service</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Water resistance restoration</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-green-500 flex-shrink-0"></i>
+                                        <span>Button repairs</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="text-center">
+                    <a href="{{ route('service.index') }}"
+   class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 mx-auto">
+    <span>View All Services</span>
+    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+</a>
+
+                    <p class="text-gray-600 mt-4">
+                        Explore our complete range of repair services and get instant quotes
+                    </p>
                 </div>
             </div>
         </section>
-
         <!-- Features Section -->
-        <section id="features" class="py-20 bg-gray-50">
+        <section id="features" class="py-10 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose TechFix Pro?</h2>

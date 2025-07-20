@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\admin\Services;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class ServiceController extends Controller
 {
     public function index(Request $request)
 
@@ -25,10 +25,14 @@ class HomeController extends Controller
 
         $services = $query->get();
 
-        return view('website.pages.homepage', [
-            'services'     => $services,
-            'deviceTypes'  => $deviceTypes,
-            'selectedType' => $selectedType,
+        // Group services by device_type_name
+        $servicesByDevice = $services->groupBy('device_type_name');
+
+        return view('website.pages.service', [
+            'services'        => $services,
+            'deviceTypes'     => $deviceTypes,
+            'selectedType'    => $selectedType,
+            'servicesByDevice' => $servicesByDevice,
         ]);
     }
 }

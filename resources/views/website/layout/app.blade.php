@@ -21,11 +21,11 @@
     </style>
 </head>
 <body class="min-h-screen bg-white">
-    @include('homepage.blocks.header')
+    @include('website.blocks.header')
   
 
     @yield('content')
-    @include('homepage.blocks.footer')
+    @include('website.blocks.footer')
     
     <script>
         // Smooth scrolling function
