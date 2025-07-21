@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Controller;
 use App\Models\admin\Services;
 use Illuminate\Http\Request;
 
@@ -28,11 +29,14 @@ class ServiceController extends Controller
         // Group services by device_type_name
         $servicesByDevice = $services->groupBy('device_type_name');
 
+        $cart = session('cart', []);
+
         return view('website.pages.service', [
             'services'        => $services,
             'deviceTypes'     => $deviceTypes,
             'selectedType'    => $selectedType,
             'servicesByDevice' => $servicesByDevice,
+            'cart'            => $cart,
         ]);
     }
 }

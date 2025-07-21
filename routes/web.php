@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -11,11 +12,6 @@ require_once(__DIR__ . '/client_routes.php');
 Route::get('/', function () {
     return view('welcome');
 });
-
-
-Route::get('/home', [HomeController::class, 'index'])->name('home.index');
-Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');

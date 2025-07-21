@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,30 +10,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-    
+
     <style>
         .animate-pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-white">
     @include('website.blocks.header')
-  
+
 
     @yield('content')
     @include('website.blocks.footer')
-    
+
+    <!-- jQuery CDN for all pages -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Smooth scrolling function
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
             }
         }
 
@@ -40,7 +54,7 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             const isOpen = menu.classList.contains('hidden');
-            
+
             if (isOpen) {
                 menu.classList.remove('hidden');
             } else {
@@ -52,7 +66,7 @@
         function openServiceModal(serviceData) {
             const modal = document.getElementById('service-modal');
             const modalContent = document.getElementById('modal-content');
-            
+
             // Populate modal with service data
             modalContent.innerHTML = generateModalContent(serviceData);
             modal.classList.remove('hidden');
@@ -66,11 +80,13 @@
         }
 
         function generateModalContent(service) {
-            const stars = Array.from({length: 5}, (_, i) => 
+            const stars = Array.from({
+                    length: 5
+                }, (_, i) =>
                 `<i data-lucide="star" class="w-5 h-5 ${i < Math.floor(service.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}"></i>`
             ).join('');
 
-            const includes = service.includes ? service.includes.map(item => 
+            const includes = service.includes ? service.includes.map(item =>
                 `<div class="flex items-center space-x-3">
                     <i data-lucide="check-circle" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
                     <span class="text-gray-700">${item}</span>
@@ -150,7 +166,7 @@
         function filterServices(category) {
             const allCategories = document.querySelectorAll('.service-category');
             const filterButtons = document.querySelectorAll('.filter-btn');
-            
+
             // Update active button
             filterButtons.forEach(btn => {
                 if (btn.dataset.category === category) {
@@ -161,7 +177,7 @@
                     btn.classList.add('bg-gray-100', 'text-gray-600');
                 }
             });
-            
+
             // Show/hide categories
             allCategories.forEach(cat => {
                 if (category === 'all' || cat.dataset.category === category) {
@@ -176,7 +192,7 @@
         function submitContactForm(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            
+
             // Here you would normally send the data to your Laravel backend
             alert('Thank you for contacting us! We will respond within 15 minutes.');
             event.target.reset();
@@ -185,7 +201,7 @@
         // Initialize Lucide icons when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();
-            
+
             // Header scroll effect
             window.addEventListener('scroll', function() {
                 const header = document.querySelector('header');
@@ -213,5 +229,10 @@
             });
         });
     </script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ asset('admin_asset/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @yield('my-js')
 </body>
+
 </html>

@@ -23,6 +23,8 @@
             </div>
         </main>
     </div>
+     <!-- jQuery UI 1.11.4 -->
+     <script src="{{ asset('admin_asset/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 </body>
 
 </html>

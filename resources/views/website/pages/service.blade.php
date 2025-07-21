@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="pt-24 pb-20 bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-6">
+    <div class="container mx-auto px-4 py-8 mt-20">
         <!-- Header Section -->
         <div class="mb-12">
             <div class="flex items-center space-x-4 mb-6">
@@ -59,14 +59,34 @@
                     <span>2-3 days</span>
                 </div>
                 <div class="text-2xl font-bold text-blue-600 mb-2">${{ $service->base_price }}</div>
-                <a href="" class="bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-500 transition-colors flex items-center justify-center space-x-2 mt-auto">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                    <span>Book Now</span>
-                </a>
+
+                <div class="flex gap-3 mt-4">
+                    <a href="{{ route('payment.index') }}" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                        <span>Order Now</span>
+                    </a>
+                    <button data-url="{{ route('cart.add-service-to-cart', ['service' => $service->id]) }}" data-service-id="{{ $service->id }}" class="add-service-to-cart relative flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                        Add to Cart
+                        <span class="service-qty-badge absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ isset($cart[$service->id]) ? $cart[$service->id]['qty'] : 0 }}
+                        </span>
+                    </button>
+                </div>
             </div>
             @endforeach
         </div>
         @endforeach
+        <!-- Others Service Card -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden p-6 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 mb-12">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Other Issues?</h3>
+            <p class="text-gray-600 mb-4 leading-relaxed text-center max-w-md">
+                For repair services not listed above, we are unable to provide an exact quote without a thorough inspection of your device. If you have a different issue, please leave your information here and our team will contact you with a personalized quote.
+            </p>
+            <a href="" class="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2 mt-2">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                <span>Get Quote</span>
+            </a>
+        </div>
 
         <!-- Emergency Service Banner -->
         <div class="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-8 text-white text-center mt-12">
@@ -125,4 +145,40 @@
     </div>
 </div>
 </div>
+@endsection
+
+
+@section('my-js')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.add-service-to-cart').on('click', function(e) {
+            var $button = $(this);
+            var url = $button.data('url');
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+
+                    // Update badge near this button
+                    $button.find('.service-qty-badge').text(response.service_qty);
+
+                    // Update cart icon badge in header
+                    $('.cart-qty-badge').text(response.total_qty);
+                },
+                statusCode: {
+                    401: function() {
+                        window.location.href = "{{ route('login') }}";
+                    }
+                }
+            });
+        });
+    });
+</script>
 @endsection

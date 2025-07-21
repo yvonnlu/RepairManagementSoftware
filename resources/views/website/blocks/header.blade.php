@@ -33,6 +33,12 @@
                     <button onclick="scrollToSection('contact')" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Contact
                     </button>
+                    <a href="{{ route('cart.index') }}" class="relative text-gray-700 hover:text-blue-600 transition-colors">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                        <span class="cart-qty-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ session('cart') ? array_sum(array_column(session('cart'), 'qty')) : 0 }}
+                        </span>
+                    </a>
                     <button onclick="scrollToSection('contact')" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                         Book Now
                     </button>
@@ -63,13 +69,19 @@
                 <button onclick="scrollToSection('contact')" class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Contact
                 </button>
+                <a href="{{ route('cart.index') }}" class="relative inline-block text-gray-700 hover:text-blue-600 transition-colors">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                        <span>Cart</span>
+                        <span class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </div>
+                </a>
                 <button onclick="scrollToSection('contact')" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mt-4">
                     Book Now
                 </button>
             </div>
         </div>
     </nav>
-   
-    
-</header>
 
+
+</header>
