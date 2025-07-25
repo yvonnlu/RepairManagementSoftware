@@ -39,12 +39,14 @@ class CartController extends Controller
         $serviceId = $request->query('service_id');
         if ($serviceId) {
             $service = Services::findOrFail($serviceId);
-            $cart = [[
-                'device_type_name' => $service->device_type_name,
-                'issue_category_name' => $service->issue_category_name,
-                'qty' => 1,
-                'price' => $service->base_price,
-            ]];
+            $cart = [
+                $service->id => [
+                    'device_type_name' => $service->device_type_name,
+                    'issue_category_name' => $service->issue_category_name,
+                    'qty' => 1,
+                    'price' => $service->base_price,
+                ]
+            ];
         } else {
             $cart = session()->get('cart', []);
         }
@@ -117,6 +119,8 @@ class CartController extends Controller
     }
     public function placeOrder(Request $request)
     {
+        // Debug: check cart and request data
+        // dd($cart, $request->all());
         // dd($request->all(), session()->get('cart', []));
         //Validation
         $validated = $request->validate([
@@ -132,6 +136,22 @@ class CartController extends Controller
 
             $total = 0;
             $cart = session()->get('cart', []);
+            // Nếu cart rỗng nhưng có service_id (đặt hàng trực tiếp từ service)
+            if (empty($cart) && $request->has('service_id')) {
+                $service = Services::findOrFail($request->input('service_id'));
+                $cart = [
+                    $service->id => [
+                        'device_type_name' => $service->device_type_name,
+                        'issue_category_name' => $service->issue_category_name,
+                        'qty' => 1,
+                        'price' => $service->base_price,
+                    ]
+                ];
+            }
+            // Nếu cart vẫn rỗng thì không tạo order, trả về view empty_cart và dừng hàm
+            if (empty($cart)) {
+                return view('website.pages.empty_cart');
+            }
             foreach ($cart as $item) {
                 $total += $item['price'] * $item['qty'];
             }
@@ -145,18 +165,15 @@ class CartController extends Controller
             $order->subtotal = $total;
             $order->total = $total;
             $order->save(); //insert record
-
+            if (!$order->id) {
+                throw new \Exception('Order not saved!');
+            }
             foreach ($cart as $serviceId => $item) {
                 // - insert record to order item table
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;
                 $orderItem->service_id = $serviceId;
                 $orderItem->price = $item['price'];
-
-                // $orderItem->name = $item['device_type_name'];
-
-                // $orderItem->name = $item['issue_category_name'];
-
                 $orderItem->name = $item['device_type_name'] . ' - ' . $item['issue_category_name'];
                 $orderItem->qty = $item['qty'];
                 $orderItem->save(); //insert record
@@ -197,14 +214,6 @@ class CartController extends Controller
             }
 
             if ($request->payment_method === 'vnpay') {
-
-                // VNPAY_TMNCODE=
-                // VNPAY_HASHSECRET=
-                // VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-                // VNPAY_RETURNURL=http://localhost:8000/vnpay_return
-                // VNPAY_APIURL=http://sandbox.vnpayment.vn/merchant_webapi/merchant.html
-                // VNPAY_APIURL_APIURL=https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
-
                 date_default_timezone_set('Asia/Ho_Chi_Minh');
                 $startTime = date("YmdHis");
                 $expire = date('YmdHis', strtotime('+15 minutes', strtotime($startTime)));
@@ -256,11 +265,12 @@ class CartController extends Controller
 
                 return redirect()->to($vnp_Url);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            throw new Exception($e->getMessage());
+            Log::error('Order failed: ' . $e->getMessage());
+            return view('website.pages.order_failed', ['error' => $e->getMessage()]);
         }
 
-        return redirect()->route('home.index');
+        return redirect()->route('order.success');
     }
 }

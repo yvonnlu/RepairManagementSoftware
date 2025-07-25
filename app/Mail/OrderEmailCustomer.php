@@ -27,8 +27,9 @@ class OrderEmailCustomer extends Mailable
      */
     public function envelope(): Envelope
     {
+        $customerName = $this->order->user->name ?? '';
         return new Envelope(
-            subject: 'Order Email Customer',
+            subject: 'Thank you ' . $customerName . ' for your order!',
         );
     }
 

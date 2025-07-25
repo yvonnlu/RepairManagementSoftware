@@ -25,4 +25,6 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/checkout/submit', [PaymentController::class, 'submit'])->name('checkout.submit');
 
+
+require __DIR__ . '/order_success.php';
 require __DIR__ . '/auth.php';

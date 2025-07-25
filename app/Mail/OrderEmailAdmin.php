@@ -29,8 +29,9 @@ class OrderEmailAdmin extends Mailable
      */
     public function envelope(): Envelope
     {
+        $customerName = $this->order->user->name ?? 'Customer';
         return new Envelope(
-            subject: 'Order Email Admin',
+            subject: 'A new order has been placed by ' . $customerName,
         );
     }
 
