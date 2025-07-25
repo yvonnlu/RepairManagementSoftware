@@ -9,7 +9,7 @@
         </svg>
         <h2 class="text-2xl font-bold text-gray-700 mb-2">Your cart is empty</h2>
         <p class="text-gray-500 mb-6">You haven't added any services yet. Start exploring our services now!</p>
-        <a href="{{ route('home.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition">Back to Home</a>
+        <a href="{{ route('service.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition">Back to Service</a>
     </div>
     @else
     <div class="overflow-x-auto">
@@ -55,6 +55,11 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <td colspan="4" class="px-6 py-4 text-right font-bold text-lg">Subtotal</td>
+                    <td class="px-6 py-4 text-right text-blue-600 text-xl font-bold cart-subtotal-value">${{ number_format($total, 2) }}</td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td colspan="4" class="px-6 py-4 text-right font-bold text-lg">Total</td>
                     <td class="px-6 py-4 text-right text-blue-700 text-2xl font-bold cart-total-value">${{ number_format($total, 2) }}</td>
                     <td></td>
@@ -86,6 +91,7 @@
                     $row.find('.cart-item-subtotal').text('$' + Number(response.subtotal).toFixed(2));
                     $('.cart-qty-badge').text(response.total_qty);
                     $('.cart-total-value').text('$' + Number(response.total).toFixed(2));
+                    $('.cart-subtotal-value').text('$' + Number(response.total).toFixed(2));
                     $('.add-service-to-cart[data-service-id="' + serviceId + '"] .service-qty-badge').text(response.service_qty);
                 }
             });

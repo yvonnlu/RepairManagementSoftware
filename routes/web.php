@@ -23,4 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::post('/checkout/submit', [PaymentController::class, 'submit'])->name('checkout.submit');
+
+require __DIR__ . '/auth.php';

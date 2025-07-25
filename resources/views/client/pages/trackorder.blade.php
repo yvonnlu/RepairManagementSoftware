@@ -1,4 +1,4 @@
-@extends('client.layout.app')
+{{-- @extends('client.layout.app') --}}
 
 @section('title', 'Track Orders')
 

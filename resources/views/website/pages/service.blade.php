@@ -61,7 +61,9 @@
                 <div class="text-2xl font-bold text-blue-600 mb-2">${{ $service->base_price }}</div>
 
                 <div class="flex gap-3 mt-4">
-                    <a href="{{ route('payment.index') }}" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                    {{-- <a href="{{ route('payment.index') }}"  --}}
+                    <a href="{{ route('payment.index', ['service_id' => $service->id]) }}"
+                    class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
                         <i data-lucide="credit-card" class="w-4 h-4"></i>
                         <span>Order Now</span>
                     </a>
