@@ -7,7 +7,16 @@
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4 -4m5 2a9 9 0 1 1-18 0a9 9 0 0 1 18 0z" />
             </svg>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                @if (isset($payment_method) && $payment_method === 'cod')
+                    Order Successful!
+                @else
+                    Payment Successful!
+                @endif
+            </h2>
+            @if (isset($message))
+                <p class="text-green-700 font-semibold mb-2">{{ $message }}</p>
+            @endif
             <p class="text-gray-600 mb-6">Thank you for your order. We have received your order and will contact you as soon
                 as possible.</p>
             <a href="{{ route('home.index') }}"

@@ -19,6 +19,78 @@ use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
+    /**
+     * Map VNPay response code to human-readable description
+     */
+    private function mapVnpayResponseCode($code)
+    {
+        $map = [
+            '00' => 'Transaction successful',
+            '01' => 'Transaction failed: Invalid merchant',
+            '02' => 'Transaction failed: Insufficient balance',
+            '04' => 'Transaction failed: Card expired',
+            '05' => 'Transaction failed: Incorrect password',
+            '06' => 'Transaction failed: Exceeded withdrawal limit',
+            '07' => 'Transaction failed: Suspicious transaction',
+            '09' => 'Transaction failed: Card/account not registered for InternetBanking',
+            '10' => 'Transaction failed: Incorrect authentication',
+            '11' => 'Transaction failed: Transaction timeout',
+            '12' => 'Transaction failed: Invalid transaction',
+            '13' => 'Transaction failed: Incorrect amount',
+            '24' => 'Transaction canceled by customer',
+            '51' => 'Transaction failed: Insufficient funds',
+            '65' => 'Transaction failed: Exceeded withdrawal frequency',
+            '75' => 'Transaction failed: Exceeded number of password attempts',
+            '79' => 'Transaction failed: Card not registered for service',
+            '99' => 'Transaction failed: Other error',
+        ];
+        return $map[$code] ?? 'Unknown VNPay response code';
+    }
+
+    public function vnpayReturn(\Illuminate\Http\Request $request)
+    {
+        $vnp_TxnRef = $request->input('vnp_TxnRef');
+        $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+        $orderPayment = \App\Models\OrderPaymentMethod::where('order_id', $vnp_TxnRef)->first();
+        if (!$orderPayment) {
+            return 'Order not found!';
+        }
+        $description = $this->mapVnpayResponseCode($vnp_ResponseCode);
+        if ($vnp_ResponseCode === '00') {
+            $orderPayment->status = 'success';
+            $orderPayment->reason_failed = null;
+        } else {
+            $orderPayment->status = 'failed';
+            $orderPayment->reason_failed = $description;
+        }
+        // Save response code and description if you have columns for them
+        if (property_exists($orderPayment, 'vnp_response_code')) {
+            $orderPayment->vnp_response_code = $vnp_ResponseCode;
+        }
+        if (property_exists($orderPayment, 'vnp_response_desc')) {
+            $orderPayment->vnp_response_desc = $description;
+        }
+        $orderPayment->save();
+        // Optionally, update order status as well
+        $order = $orderPayment->order;
+        if ($order) {
+            $order->status = $orderPayment->status;
+            $order->save();
+        }
+        // Pass description to view for user feedback
+        if ($vnp_ResponseCode === '00') {
+            return view('website.pages.order_success', [
+                'message' => $description,
+                'payment_method' => 'vnpay',
+            ]);
+        } else {
+            return view('website.pages.order_failed', [
+                'error' => $description,
+                'vnp_ResponseCode' => $vnp_ResponseCode,
+                'payment_method' => 'vnpay',
+            ]);
+        }
+    }
 
     public function index()
     {
@@ -271,6 +343,10 @@ class CartController extends Controller
             return view('website.pages.order_failed', ['error' => $e->getMessage()]);
         }
 
-        return redirect()->route('order.success');
+        // For COD, show order_success with correct heading
+        return view('website.pages.order_success', [
+            'message' => 'Your order has been placed successfully.',
+            'payment_method' => 'cod',
+        ]);
     }
 }

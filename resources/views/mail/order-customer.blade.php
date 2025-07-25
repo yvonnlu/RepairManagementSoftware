@@ -1,6 +1,8 @@
 <html style="font-family: Arial, sans-serif; background: #f6f8fa;">
+
 <body style="margin:0;padding:0;background:#f6f8fa;">
-    <div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #e0e7ef;padding:32px;">
+    <div
+        style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #e0e7ef;padding:32px;">
         <h2 style="color:#2563eb;text-align:center;margin-bottom:24px;">Order Confirmation</h2>
         <div style="margin-bottom:24px;">
             <h3 style="margin:0 0 8px 0;color:#111827;font-size:18px;">Customer Information</h3>
@@ -22,19 +24,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($order->orderItems as $orderItem)
-                    <tr style="border-bottom:1px solid #e5e7eb;">
-                        <td style="padding:8px 8px;">{{ $loop->iteration }}</td>
-                        <td style="padding:8px 8px;">{{ $orderItem->name }}</td>
-                        <td style="padding:8px 8px;text-align:center;">{{ $orderItem->qty }}</td>
-                        <td style="padding:8px 8px;text-align:right;">{{ number_format($orderItem->price * $orderItem->qty, 2) }}</td>
-                    </tr>
-                @endforeach
+                    @foreach ($order->orderItems as $orderItem)
+                        <tr style="border-bottom:1px solid #e5e7eb;">
+                            <td style="padding:8px 8px;">{{ $loop->iteration }}</td>
+                            <td style="padding:8px 8px;">{{ $orderItem->name }}</td>
+                            <td style="padding:8px 8px;text-align:center;">{{ $orderItem->qty }}</td>
+                            <td style="padding:8px 8px;text-align:right;">
+                                {{ number_format($orderItem->price * $orderItem->qty, 2) }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3" style="padding:12px 8px;text-align:right;font-weight:bold;">Total</td>
-                        <td style="padding:12px 8px;text-align:right;font-weight:bold;color:#2563eb;">{{ number_format($order->total, 2) }}</td>
+                        <td style="padding:12px 8px;text-align:right;font-weight:bold;color:#2563eb;">
+                            {{ number_format($order->total, 2) }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -42,4 +46,5 @@
         <div style="text-align:center;color:#64748b;font-size:14px;">Thank you for your order!</div>
     </div>
 </body>
+
 </html>

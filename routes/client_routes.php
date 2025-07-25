@@ -9,6 +9,7 @@ use App\Http\Middleware\CheckIsClient;
 use App\Mail\TestEmailTemplate;
 use App\Models\Services;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('google/redirect', [GoogleController::class, 'redirect'])->name('client.google.redirect');
@@ -40,12 +41,10 @@ Route::get('test-mail', function () {
     $service = Services::find(1);
     Mail::to('lunguyetnghia@gmail.com')->send(new TestEmailTemplate($service));
 });
+Route::get('vnpay_return', [CartController::class, 'vnpayReturn']);
 
 Route::get('cart/add-service-to-cart/{service}', [CartController::class, 'addServiceToCart'])->name('cart.add-service-to-cart')->middleware('auth');
 
 Route::get('cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
 Route::delete('cart/remove/{service}', [CartController::class, 'removeFromCart'])->name('cart.remove')->middleware('auth');
 Route::patch('cart/update/{service}', [CartController::class, 'updateQty'])->name('cart.update')->middleware('auth');
-
-
-

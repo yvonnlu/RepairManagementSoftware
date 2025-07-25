@@ -27,4 +27,5 @@ Route::post('/checkout/submit', [PaymentController::class, 'submit'])->name('che
 
 
 require __DIR__ . '/order_success.php';
+require __DIR__ . '/vnpay_return.php';
 require __DIR__ . '/auth.php';
