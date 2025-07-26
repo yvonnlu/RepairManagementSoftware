@@ -1,4 +1,4 @@
-<!-- <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+{{-- <!-- <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
 <header
     class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-20 lg:left-64 transition-all duration-300">
     <div class="flex items-center justify-between">
@@ -328,7 +328,7 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
                             </svg>
                             <span>Profile</span>
                         </a>
-                        <a href=""
+                        <a href="{{ route('client.profile') }}"
                             class="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -354,4 +354,4 @@ $unreadCount = collect($notifications)->where('unread', true)->count();
             </div>
         </div>
     </div>
-</header>
+</header> --}}

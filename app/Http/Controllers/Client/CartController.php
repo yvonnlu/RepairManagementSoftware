@@ -349,4 +349,43 @@ class CartController extends Controller
             'payment_method' => 'cod',
         ]);
     }
+
+    // Trang thông tin khách hàng
+    public function profileShow()
+    {
+        $user = Auth::user();
+        return view('client.pages.profile', [
+            'user' => $user,
+        ]);
+    }
+
+    // Trang lịch sử đơn hàng
+    public function orderShow()
+    {
+        $user = Auth::user();
+        $orders = Order::where('user_id', $user->id)
+            ->with(['orderItems.product'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $orderList = [];
+        $stt = 1;
+        foreach ($orders as $order) {
+            $mainItem = $order->orderItems->first();
+            $deviceType = $mainItem && $mainItem->product ? $mainItem->product->device_type_name ?? '' : '';
+            $issueCategory = $mainItem && $mainItem->product ? $mainItem->product->issue_category_name ?? '' : '';
+            $orderList[] = [
+                'stt' => $stt++,
+                'updated_at' => $order->updated_at,
+                'device_type_name' => $deviceType,
+                'issue_category_name' => $issueCategory,
+                'order_step' => $order->order_step ?? $order->status,
+                'total' => $order->total,
+            ];
+        }
+
+        return view('client.pages.orders', [
+            'orderList' => $orderList,
+        ]);
+    }
 }
