@@ -10,7 +10,7 @@
             'id' => 'customers',
             'label' => 'Customers',
             'icon' => 'users',
-            'route' => '#',
+            'route' => 'admin.customer.index',
         ],
         [
             'id' => 'services',
@@ -22,7 +22,7 @@
             'id' => 'orders',
             'label' => 'Orders',
             'icon' => 'shopping-cart',
-            'route' => '#',
+            'route' => 'admin.orderlist',
         ],
         // [
         //     'id' => 'technicians',
@@ -34,7 +34,7 @@
             'id' => 'inventory',
             'label' => 'Inventory',
             'icon' => 'archive',
-            'route' => '#',
+            'route' => 'admin.inventorylist',
         ],
         // [
         //     'id' => 'appointments',
@@ -92,20 +92,20 @@
     <!-- Navigation -->
     <nav class="mt-6 flex-1 overflow-y-auto">
         @foreach ($menuItems as $item)
-    @php
-        $isActive =
-            $currentRoute === $item['route'] ||
-            str_starts_with($currentRoute, str_replace('.index', '', $item['route']));
-    @endphp
+            @php
+                $isActive =
+                    $currentRoute === $item['route'] ||
+                    str_starts_with($currentRoute, str_replace('.index', '', $item['route']));
+            @endphp
 
-    <a href="{{ $item['route'] !== '#' ? route($item['route']) : '#' }}"
-        class="w-full flex items-center gap-3 px-6 py-3 text-left transition-all duration-200 {{ $isActive
-            ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-600 font-medium'
-            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-        <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
-        {{ $item['label'] }}
-    </a>
-@endforeach
+            <a href="{{ $item['route'] !== '#' ? route($item['route']) : '#' }}"
+                class="w-full flex items-center gap-3 px-6 py-3 text-left transition-all duration-200 {{ $isActive
+                    ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-600 font-medium'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
+                {{ $item['label'] }}
+            </a>
+        @endforeach
 
     </nav>
 
@@ -136,8 +136,6 @@
         }
     });
 
- 
+
     lucide.createIcons();
-
-
 </script>

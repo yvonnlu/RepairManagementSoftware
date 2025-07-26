@@ -1,7 +1,5 @@
 @extends('admin.layout.app')
 
-@section('title', 'Service Management')
-
 @section('content')
     <div class="space-y-6" x-data="serviceManagement()">
         <!-- Header -->
