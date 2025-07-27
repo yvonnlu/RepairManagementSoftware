@@ -10,17 +10,14 @@
                     @method('PATCH')
                     <select name="service_step" onchange="this.form.submit()"
                         class="border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800 font-semibold rounded-lg px-4 py-2 shadow-md hover:shadow-lg transition-all duration-200 focus:ring-4 focus:ring-blue-200 focus:border-blue-500">
-                        <option value="New Order" 
+                        <option value="New Order"
                             {{ ($order->service_step ?? 'New Order') == 'New Order' ? 'selected' : '' }}>📋 New Order
                         </option>
-                        <option value="Diagnosing" 
-                            {{ ($order->service_step ?? '') == 'Diagnosing' ? 'selected' : '' }}>
+                        <option value="Diagnosing" {{ ($order->service_step ?? '') == 'Diagnosing' ? 'selected' : '' }}>
                             🔍 Diagnosing</option>
-                        <option value="Completed" 
-                            {{ ($order->service_step ?? '') == 'Completed' ? 'selected' : '' }}>
+                        <option value="Completed" {{ ($order->service_step ?? '') == 'Completed' ? 'selected' : '' }}>
                             ✅ Completed</option>
-                        <option value="Cancelled" 
-                            {{ ($order->service_step ?? '') == 'Cancelled' ? 'selected' : '' }}>
+                        <option value="Cancelled" {{ ($order->service_step ?? '') == 'Cancelled' ? 'selected' : '' }}>
                             ❌ Cancelled</option>
                     </select>
                 </form>
@@ -199,8 +196,8 @@
             <!-- Order Timeline/Notes -->
             <div class="bg-gray-50 p-6 rounded-lg">
                 <h2 class="text-lg font-semibold mb-4">Order Notes</h2>
-                @if ($order->notes)
-                    <p class="text-gray-700">{{ $order->notes }}</p>
+                @if ($order->note)
+                    <p class="text-gray-700">{{ $order->note }}</p>
                 @else
                     <p class="text-gray-500 italic">No notes available</p>
                 @endif

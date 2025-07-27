@@ -21,6 +21,10 @@ Route::prefix('admin/customer')
         Route::post('update/{customer}', 'update')->name('update');
         Route::get('create', 'create')->name('create');
         Route::post('store', 'store')->name('store');
+        Route::delete('destroy/{customer}', 'destroy')->name('destroy');
+        Route::post('restore/{id}', 'restore')->name('restore');
+
+        Route::get('restore/{customer}', 'restore')->name('restore');
     });
 
 

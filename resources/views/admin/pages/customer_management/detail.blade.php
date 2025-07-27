@@ -32,6 +32,7 @@
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Payment Method</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Payment Status</th>
                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -44,6 +45,7 @@
                                 <td class="px-4 py-2">{{ $order->status ?? '-' }}</td>
                                 <td class="px-4 py-2">{{ $order->total ? '$' . number_format($order->total, 2) : '-' }}
                                 </td>
+                                <td class="px-4 py-2">{{ $order->note ?? '-' }}</td>
                             </tr>
                         @empty
                             <tr>

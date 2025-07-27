@@ -10,8 +10,8 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        // Lấy tất cả user (không phân biệt role), đếm orders
-        $query = User::withCount('orders');
+        // Lấy tất cả user kể cả đã soft delete, đếm orders
+        $query = User::withTrashed()->withCount('orders');
 
         // Tìm kiếm nếu có search term
         if ($request->filled('search')) {
@@ -40,5 +40,46 @@ class CustomerController extends Controller
         return view('admin.pages.customer_management.detail', [
             'customer' => $customer
         ]);
+    }
+
+    public function destroy(User $customer)
+    {
+        try {
+            // Soft delete user
+            $customer->delete();
+
+            return redirect()->route('admin.customer.index')
+                ->with('success', 'Customer has been deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.customer.index')
+                ->with('error', 'Failed to delete customer. Please try again.');
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            // Tìm user đã soft delete
+            $customer = User::onlyTrashed()->findOrFail($id);
+
+            // Kiểm tra email đã tồn tại cho user khác chưa
+            $existingUser = User::where('email', $customer->email)
+                ->whereNull('deleted_at')
+                ->exists();
+
+            if ($existingUser) {
+                return redirect()->route('admin.customer.index')
+                    ->with('error', 'Cannot restore: Email address is already in use by another active user.');
+            }
+
+            // Restore user
+            $customer->restore();
+
+            return redirect()->route('admin.customer.index')
+                ->with('success', 'Customer has been restored successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.customer.index')
+                ->with('error', 'Failed to restore customer. Please try again.');
+        }
     }
 }

@@ -74,7 +74,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-800">RepairPro</h1>
+                    <h1 class="text-xl font-bold text-gray-800">Fixicon</h1>
                     <p class="text-sm text-gray-600">Admin Panel</p>
                 </div>
             </div>
@@ -112,7 +112,7 @@
     <!-- Footer -->
     <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 bg-white">
         <div class="text-center">
-            <p class="text-xs text-gray-500">RepairPro v2.0</p>
+            <p class="text-xs text-gray-500">Fixicon 1.0.0</p>
             <p class="text-xs text-gray-400">Professional Repair Management</p>
         </div>
     </div>
