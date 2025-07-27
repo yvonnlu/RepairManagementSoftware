@@ -22,7 +22,7 @@
             'id' => 'orders',
             'label' => 'Orders',
             'icon' => 'shopping-cart',
-            'route' => 'admin.orderlist',
+            'route' => 'admin.order.index',
         ],
         // [
         //     'id' => 'technicians',

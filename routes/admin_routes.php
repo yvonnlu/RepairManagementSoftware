@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,19 @@ Route::prefix('admin/customer')
         Route::post('store', 'store')->name('store');
     });
 
+
+Route::prefix('admin/order')
+    ->controller(OrderController::class)
+    ->name('admin.order.')
+    ->middleware(CheckIsAdmin::class) // optional: add 'web' if outside web.php
+    ->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::get('detail/{order}', 'detail')->name('detail');
+        Route::post('update/{order}', 'update')->name('update');
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'store')->name('store');
+    });
+
 Route::prefix('admin/service')
     ->controller(ServicesController::class)
     ->name('admin.service.')
@@ -34,6 +48,8 @@ Route::prefix('admin/service')
     Route::post('store', 'store')->name('store');
 
 });
+
+
 
 Route::get('admin/orderlist', function () {
     return view('admin.pages.order_management.list');
