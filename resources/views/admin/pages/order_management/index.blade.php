@@ -35,27 +35,16 @@
                         <input type="hidden" name="search" :value="searchTerm">
                         <select name="status" onchange="this.form.submit()"
                             class="px-4 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">All Statuses</option>
-                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="diagnosing" {{ request('status') === 'diagnosing' ? 'selected' : '' }}>Diagnosing
+                            <option value="">All Service Steps</option>
+                            <option value="new_order" {{ request('status') === 'new_order' ? 'selected' : '' }}>New Order
                             </option>
-                            <option value="repairing" {{ request('status') === 'repairing' ? 'selected' : '' }}>Repairing
+                            <option value="diagnosing" {{ request('status') === 'diagnosing' ? 'selected' : '' }}>Diagnosing
                             </option>
                             <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed
                             </option>
-                            <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>Delivered
+                            <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelled
                             </option>
                         </select>
-
-                        <button type="button" @click="showFilters = !showFilters"
-                            class="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
-                                </path>
-                            </svg>
-                            <span>More Filters</span>
-                        </button>
                     </form>
                 </div>
             </div>
@@ -80,7 +69,8 @@
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Payment Method</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Service
                                 Step</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Action</th>
@@ -100,7 +90,21 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $order->orderPaymentMethod->method ?? '-' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $order->order_step ?? '-' }}</td>
+                                    @php
+                                        $stepClasses = [
+                                            'New Order' => 'bg-blue-100 text-blue-800',
+                                            'Diagnosing' => 'bg-yellow-100 text-yellow-800',
+                                            'Completed' => 'bg-green-100 text-green-800',
+                                            'Cancelled' => 'bg-red-100 text-red-800',
+                                        ];
+                                        $step = $order->service_step ?? 'New Order';
+                                        $class = $stepClasses[$step] ?? 'bg-gray-100 text-gray-800';
+                                    @endphp
+                                    <span
+                                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $class }}">
+                                        {{ $step }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div class="flex items-center space-x-2">
                                         {{-- <a href="{{ route('admin.orders.edit', $order->id) }}" --}}
@@ -125,8 +129,7 @@
                                         {{-- <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" --}}
                                         <button @click="deleteCustomer()" class="text-red-600 hover:text-red-800"
                                             title="Delete">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                 </path>
@@ -147,14 +150,15 @@
             </div>
 
             <!-- Pagination -->
-            {{-- @if ($orders->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200">
-                {{ $orders->appends(request()->query())->links() }}
-    </div>
-    @endif --}}
-            <div class="px-6 py-4 border-t border-gray-200 text-sm text-gray-500 text-center">
-                Page 1 / 1
-            </div>
+            @if ($orders->hasPages())
+                <div class="px-6 py-4 border-t border-gray-200">
+                    {{ $orders->appends(request()->query())->links() }}
+                </div>
+            @else
+                <div class="px-6 py-4 border-t border-gray-200 text-sm text-gray-500 text-center">
+                    Showing {{ $orders->count() }} of {{ $orders->total() }} orders
+                </div>
+            @endif
         </div>
 
         <!-- Order Details Modal -->
@@ -348,7 +352,6 @@
         function orderManagement() {
             return {
                 showModal: false,
-                showFilters: false,
                 selectedOrder: null,
                 newStatus: '',
                 searchTerm: '{{ request('search') }}',
@@ -399,13 +402,32 @@
                 },
 
                 search() {
-                    const url = new URL(window.location);
+                    // Tạo form tự động submit để giữ nguyên pagination
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = window.location.pathname;
+
+                    // Thêm search term
                     if (this.searchTerm) {
-                        url.searchParams.set('search', this.searchTerm);
-                    } else {
-                        url.searchParams.delete('search');
+                        const searchInput = document.createElement('input');
+                        searchInput.type = 'hidden';
+                        searchInput.name = 'search';
+                        searchInput.value = this.searchTerm;
+                        form.appendChild(searchInput);
                     }
-                    window.history.pushState({}, '', url);
+
+                    // Giữ lại status filter nếu có
+                    const statusSelect = document.querySelector('select[name="status"]');
+                    if (statusSelect && statusSelect.value) {
+                        const statusInput = document.createElement('input');
+                        statusInput.type = 'hidden';
+                        statusInput.name = 'status';
+                        statusInput.value = statusSelect.value;
+                        form.appendChild(statusInput);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             }
         }

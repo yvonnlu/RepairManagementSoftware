@@ -25,59 +25,11 @@
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                     <form method="GET" action="">
-                        <input type="text" name="search" placeholder="Search by name, phone, email..."
+                        <input type="text" name="search" placeholder="Search by name, email..."
                             class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
                             value="{{ request('search') }}" x-model="searchTerm" @input.debounce.300ms="search()" />
                     </form>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button @click="showFilters = !showFilters"
-                        class="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
-                            </path>
-                        </svg>
-                        <span>Filter</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filter Panel -->
-            <div x-show="showFilters" x-transition class="mt-4 pt-4 border-t border-gray-200" style="display: none;">
-                <form method="GET" action="" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
-                            <option value="">All</option>
-                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
-                        <select name="sort"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
-                            <option value="name" {{ request('sort') === 'name' ? 'selected' : '' }}>Name</option>
-                            <option value="created_at"
-                                {{ request('sort', 'created_at') === 'created_at' ? 'selected' : '' }}>Created Date</option>
-                            <option value="total_orders" {{ request('sort') === 'total_orders' ? 'selected' : '' }}>Total
-                                Orders</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button type="submit"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                            Apply
-                        </button>
-                        <a href=""
-                            class="ml-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                            Clear Filters
-                        </a>
-                    </div>
-                </form>
             </div>
         </div>
 
@@ -87,6 +39,9 @@
                 <table class="w-full">
                     <thead class="bg-gray-50">
                         <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                STT
+                            </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Customer
                             </th>
@@ -100,9 +55,6 @@
                                 Created Date
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -110,6 +62,9 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($customers as $customer)
                             <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $customers->firstItem() + $loop->index }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="text-sm font-medium text-gray-900">{{ $customer->name }}</span>
                                 </td>
@@ -121,12 +76,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $customer->created_at->format('d/m/Y') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 py-1 text-xs font-medium rounded-full {{ $customer->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ $customer->status === 'active' ? 'Active' : 'Inactive' }}
-                                    </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
@@ -141,8 +90,7 @@
                                             </svg>
                                         </button>
                                         <a href="" class="text-green-600 hover:text-green-800" title="Edit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                                 </path>
@@ -150,8 +98,7 @@
                                         </a>
                                         <button @click="deleteCustomer({{ $customer->id }}, '{{ $customer->name }}')"
                                             class="text-red-600 hover:text-red-800" title="Delete">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                 </path>
@@ -162,7 +109,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                     No customers found
                                 </td>
                             </tr>
@@ -172,16 +119,21 @@
             </div>
 
             <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-200 text-sm text-gray-500 text-center">
-                Page 1 of 1
-            </div>
+            @if ($customers->hasPages())
+                <div class="px-6 py-4 border-t border-gray-200">
+                    {{ $customers->appends(request()->query())->links() }}
+                </div>
+            @else
+                <div class="px-6 py-4 border-t border-gray-200 text-sm text-gray-500 text-center">
+                    Showing {{ $customers->count() }} of {{ $customers->total() }} customers
+                </div>
+            @endif
         </div>
 
         <!-- Customer Details Modal -->
-        <div x-show="showModal" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
+        <div x-show="showModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;"
             @click.self="showModal = false">
             <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
@@ -318,7 +270,6 @@
             return {
                 showModal: false,
                 showDeleteModal: false,
-                showFilters: false,
                 selectedCustomer: null,
                 customerToDelete: null,
                 searchTerm: '{{ request('search') }}',
@@ -370,15 +321,22 @@
                 },
 
                 search() {
-                    const url = new URL(window.location);
+                    // Tạo form tự động submit để giữ nguyên pagination
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = window.location.pathname;
+
+                    // Thêm search term
                     if (this.searchTerm) {
-                        url.searchParams.set('search', this.searchTerm);
-                    } else {
-                        url.searchParams.delete('search');
+                        const searchInput = document.createElement('input');
+                        searchInput.type = 'hidden';
+                        searchInput.name = 'search';
+                        searchInput.value = this.searchTerm;
+                        form.appendChild(searchInput);
                     }
-                    window.history.pushState({}, '', url);
-                    // Optionally reload the page or use AJAX to update results
-                    // window.location.reload();
+
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             }
         }

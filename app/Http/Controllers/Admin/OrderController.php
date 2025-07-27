@@ -8,14 +8,53 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy danh sách orders cùng các quan hệ liên quan
-        $orders = Order::with([
+        // Khởi tạo query cho Order với các quan hệ liên quan
+        $query = Order::with([
             'user', // nếu có quan hệ user (khách hàng)
             'orderItems', // nếu có quan hệ orderItems
             'orderPaymentMethod', // nếu có quan hệ orderPaymentMethod
-        ])->get();
+        ]);
+
+        // Tìm kiếm nếu có search term
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('id', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', "%{$searchTerm}%")
+                            ->orWhere('email', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
+        // Lọc theo service step nếu có
+        if ($request->filled('status')) {
+            $status = $request->status;
+            switch ($status) {
+                case 'new_order':
+                    $query->where('service_step', 'New Order');
+                    break;
+                case 'diagnosing':
+                    $query->where('service_step', 'Diagnosing');
+                    break;
+                case 'completed':
+                    $query->where('service_step', 'Completed');
+                    break;
+                case 'cancelled':
+                    $query->where('service_step', 'Cancelled');
+                    break;
+                    // Thêm các case khác nếu cần
+            }
+        }
+
+        // Sắp xếp theo thời gian tạo mới nhất
+        $query->orderBy('created_at', 'desc');
+
+        // Phân trang với 5 orders mỗi trang
+        $orders = $query->paginate(5)->appends($request->query());
+
         return view('admin.pages.order_management.index', [
             'orders' => $orders
         ]);

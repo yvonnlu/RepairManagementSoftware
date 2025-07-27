@@ -43,12 +43,12 @@
                     <form method="GET" action="">
                         <input type="text" name="search" placeholder="Search services..."
                             class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-                            value="{{ request('search') }}" x-model="searchTerm" @input.debounce.300ms="search()" />
+                            value="{{ request('search') }}" x-model="searchTerm" @keyup.enter="search()" @blur="search()" />
                     </form>
                 </div>
                 <div class="flex items-center space-x-2">
                     <form method="GET" action="{{ route('admin.service.index') }}" class="flex items-center space-x-2">
-                        <input type="hidden" name="search" :value="searchTerm">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
                         <select name="device_type_name" onchange="this.form.submit()"
                             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">All Categories</option>
@@ -59,16 +59,6 @@
                                 </option>
                             @endforeach
                         </select>
-                        {{-- <select name="device_type" onchange="this.form.submit()"
-                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">All Devices</option>
-                            @foreach ($deviceTypes as $deviceType)
-                                <option value="{{ $deviceType }}"
-                                    {{ request('device_type') === $deviceType ? 'selected' : '' }}>
-                                    {{ $deviceType }}
-                                </option>
-                            @endforeach
-                        </select> --}}
                     </form>
                 </div>
             </div>
@@ -120,8 +110,8 @@
                             <div class="flex items-center space-x-2">
                             </div>
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.service.detail',['service' => $service->id]) }}" class="text-blue-600 hover:text-blue-800 transition-colors"
-                                    title="Edit Service">
+                                <a href="{{ route('admin.service.detail', ['service' => $service->id]) }}"
+                                    class="text-blue-600 hover:text-blue-800 transition-colors" title="Edit Service">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -161,11 +151,15 @@
         </div>
 
         <!-- Pagination -->
-        {{-- @if ($services->hasPages())
-        <div class="flex justify-center">
-            {{ $services->appends(request()->query())->links() }}
-</div>
-@endif --}}
+        @if ($services->hasPages())
+            <div class="flex justify-center">
+                {{ $services->appends(request()->query())->links() }}
+            </div>
+        @else
+            <div class="text-center text-sm text-gray-500">
+                Showing {{ $services->count() }} of {{ $services->total() }} services
+            </div>
+        @endif
 
 
 
@@ -202,7 +196,7 @@
                 showDeleteModal: false,
                 serviceToDelete: null,
                 searchTerm: '{{ request('
-                                            search ') }}',
+                                                            search ') }}',
 
                 async toggleServiceStatus(serviceId) {
                     try {
@@ -252,13 +246,32 @@
                 },
 
                 search() {
-                    const url = new URL(window.location);
+                    // Tạo form tự động submit để giữ nguyên pagination và filters
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = window.location.pathname;
+
+                    // Thêm search term
                     if (this.searchTerm) {
-                        url.searchParams.set('search', this.searchTerm);
-                    } else {
-                        url.searchParams.delete('search');
+                        const searchInput = document.createElement('input');
+                        searchInput.type = 'hidden';
+                        searchInput.name = 'search';
+                        searchInput.value = this.searchTerm;
+                        form.appendChild(searchInput);
                     }
-                    window.history.pushState({}, '', url);
+
+                    // Giữ lại device type filter nếu có
+                    const deviceTypeSelect = document.querySelector('select[name="device_type_name"]');
+                    if (deviceTypeSelect && deviceTypeSelect.value) {
+                        const deviceTypeInput = document.createElement('input');
+                        deviceTypeInput.type = 'hidden';
+                        deviceTypeInput.name = 'device_type_name';
+                        deviceTypeInput.value = deviceTypeSelect.value;
+                        form.appendChild(deviceTypeInput);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             }
         }

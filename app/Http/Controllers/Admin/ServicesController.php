@@ -13,30 +13,38 @@ use Illuminate\Support\Facades\DB;
 class ServicesController extends Controller
 {
     public function index(Request $request)
-
     {
         // Lấy danh sách loại thiết bị (không bị trùng)
         $deviceTypes = Services::select('device_type_name')->distinct()->get();
 
-        // Lấy giá trị device_type_name người dùng chọn từ dropdown
-        $selectedType = $request->device_type_name;
-
         // Sử dụng Eloquent để tạo truy vấn lấy dữ liệu
         $query = Services::query();
-        // giống như SELECT * FROM services.
 
-        // Nếu người dùng đã chọn một loại thiết bị, thêm điều kiện vào truy vấn
-        if (!empty($selectedType)) {
-            $query->where('device_type_name', $selectedType);
+        // Tìm kiếm nếu có search term
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('issue_category_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('device_type_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%");
+            });
         }
 
-        // Lấy danh sách service (bạn có thể dùng paginate() nếu muốn phân trang)
-        $services = $query->get();
+        // Lọc theo device type nếu có
+        if ($request->filled('device_type_name')) {
+            $query->where('device_type_name', $request->device_type_name);
+        }
+
+        // Sắp xếp theo thời gian tạo mới nhất
+        $query->orderBy('created_at', 'desc');
+
+        // Phân trang với 9 services mỗi trang (3x3 grid)
+        $services = $query->paginate(9)->appends($request->query());
 
         return view('admin.pages.service_management.index', [
             'services'     => $services,
             'deviceTypes'  => $deviceTypes,
-            'selectedType' => $selectedType,
+            'selectedType' => $request->device_type_name,
         ]);
     }
 
