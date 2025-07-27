@@ -8,6 +8,13 @@ class Order extends Model
 {
     protected $table = 'orders';
 
+    protected $fillable = [
+        'service_step',
+        'total',
+        'status',
+        'user_id'
+    ];
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'order_id');

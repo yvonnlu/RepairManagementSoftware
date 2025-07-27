@@ -66,11 +66,30 @@ class OrderController extends Controller
     //     return view('admin.pages.order_management.detail', ['orderId' => $orderId]);
     // }
 
+    public function detail(Order $order)
+    {
+        // Load các quan hệ liên quan
+        $order->load(['user', 'orderItems', 'orderPaymentMethod']);
+
+        return view('admin.pages.order_management.detail', [
+            'order' => $order
+        ]);
+    }
+
     // public function update(Request $request, $orderId)
     // {
     //     // Logic to update order by $orderId
     //     return redirect()->route('admin.order.index')->with('success', 'Order updated successfully!');
     // }
+
+    public function updateServiceStep(Request $request, $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+        $order->service_step = $request->service_step;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Service step updated successfully!');
+    }
 
     // public function create()
     // {

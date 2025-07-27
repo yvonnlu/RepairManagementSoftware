@@ -32,6 +32,7 @@ Route::prefix('admin/order')
         Route::get('index', 'index')->name('index');
         Route::get('detail/{order}', 'detail')->name('detail');
         Route::post('update/{order}', 'update')->name('update');
+        Route::patch('update-service-step/{order}', 'updateServiceStep')->name('updateServiceStep');
         Route::get('create', 'create')->name('create');
         Route::post('store', 'store')->name('store');
     });
@@ -45,9 +46,8 @@ Route::prefix('admin/service')
         Route::get('detail/{service}', 'detail')->name('detail');
         Route::post('update/{service}', 'update')->name('update');
         Route::get('create', 'create')->name('create');
-    Route::post('store', 'store')->name('store');
-
-});
+        Route::post('store', 'store')->name('store');
+    });
 
 
 

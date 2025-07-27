@@ -10,8 +10,8 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        // Khởi tạo query cho User với role customer
-        $query = User::where('role', 'customer')->withCount('orders');
+        // Lấy tất cả user (không phân biệt role), đếm orders
+        $query = User::withCount('orders');
 
         // Tìm kiếm nếu có search term
         if ($request->filled('search')) {
@@ -25,11 +25,20 @@ class CustomerController extends Controller
         // Sắp xếp theo thời gian tạo mới nhất
         $query->orderBy('created_at', 'desc');
 
-        // Phân trang với 5 customers mỗi trang
+        // Phân trang với 5 users mỗi trang
         $customers = $query->paginate(5)->appends($request->query());
 
         return view('admin.pages.customer_management.index', [
             'customers' => $customers
+        ]);
+    }
+
+    public function detail(User $customer)
+    {
+        // Lấy các dữ liệu liên quan: orders với payment method
+        $customer->load(['orders.orderPaymentMethod']);
+        return view('admin.pages.customer_management.detail', [
+            'customer' => $customer
         ]);
     }
 }
