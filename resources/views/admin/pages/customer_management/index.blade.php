@@ -15,6 +15,37 @@
             </a>
         </div>
 
+        <!-- Modal Success Notification -->
+        @if (session('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Success!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
+                    </svg>
+                </span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                    <svg class="fill-current h-6 w-6 text-red-500" role="button" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
+                    </svg>
+                </span>
+            </div>
+        @endif
+
         <!-- Search and Filter -->
         <div class="bg-white p-6 rounded-lg shadow-sm border">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
@@ -67,7 +98,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($customers as $customer)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50 {{ $customer->deleted_at ? 'opacity-60 bg-red-50' : '' }}">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $customers->firstItem() + $loop->index }}
                                 </td>
@@ -118,7 +149,8 @@
                                         @if ($customer->deleted_at)
                                             <!-- Restore button for deleted users -->
                                             <form method="POST"
-                                                action="{{ route('admin.customer.restore', $customer->id) }}" class="inline"
+                                                action="{{ route('admin.customer.restore', $customer->id) }}"
+                                                class="inline"
                                                 onsubmit="return confirm('Are you sure you want to restore {{ $customer->name }}?')">
                                                 @csrf
                                                 <button type="submit" class="text-green-600 hover:text-green-800"

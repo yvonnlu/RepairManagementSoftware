@@ -10,8 +10,8 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        // Khởi tạo query cho Order với các quan hệ liên quan
-        $query = Order::with([
+        // Khởi tạo query cho Order với các quan hệ liên quan, bao gồm cả soft deleted
+        $query = Order::withTrashed()->with([
             'user', // nếu có quan hệ user (khách hàng)
             'orderItems', // nếu có quan hệ orderItems
             'orderPaymentMethod', // nếu có quan hệ orderPaymentMethod
@@ -102,4 +102,35 @@ class OrderController extends Controller
     //     // Logic to store new order
     //     return redirect()->route('admin.order.index')->with('success', 'Order created successfully!');
     // }
+
+    public function destroy(Order $order)
+    {
+        try {
+            // Soft delete order
+            $order->delete();
+
+            return redirect()->route('admin.order.index')
+                ->with('success', 'Order has been deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.order.index')
+                ->with('error', 'Failed to delete order. Please try again.');
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            // Find the soft-deleted order by ID
+            $order = Order::withTrashed()->findOrFail($id);
+
+            // Restore order
+            $order->restore();
+
+            return redirect()->route('admin.order.index')
+                ->with('success', 'Order has been restored successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.order.index')
+                ->with('error', 'Failed to restore order. Please try again.');
+        }
+    }
 }

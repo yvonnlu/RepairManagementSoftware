@@ -15,6 +15,37 @@
             </div>
         </div>
 
+        <!-- Modal Success Notification -->
+        @if (session('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Success!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
+                    </svg>
+                </span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                    <svg class="fill-current h-6 w-6 text-red-500" role="button" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
+                    </svg>
+                </span>
+            </div>
+        @endif
+
         <!-- Search and Filter -->
         <div class="bg-white p-6 rounded-lg shadow-sm border">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
@@ -70,15 +101,20 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Payment Method</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Service
-                                Step</th>
+                                Service Step</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Created Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Deleted Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($orders as $order)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50 {{ $order->deleted_at ? 'opacity-60 bg-red-50' : '' }}">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -106,11 +142,33 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $order->created_at->format('d/m/Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @if ($order->deleted_at)
+                                        <span class="text-red-600">{{ $order->deleted_at->format('d/m/Y H:i') }}</span>
+                                    @else
+                                        <span class="text-gray-400">-</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    @if ($order->deleted_at)
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Deleted
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div class="flex items-center space-x-2">
-                                        {{-- <a href="{{ route('admin.orders.edit', $order->id) }}" --}}
                                         <a href="{{ route('admin.order.detail', $order->id) }}"
                                             class="text-blue-600 hover:text-blue-800" title="View Details">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -118,29 +176,49 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        {{-- <a href="{{ route('admin.orders.show', $order->id) }}" --}}
-                                        {{-- <a href="" class="text-green-600 hover:text-green-800" title="Edit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a> --}}
-                                        {{-- <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" --}}
-                                        <button @click="deleteCustomer()" class="text-red-600 hover:text-red-800"
-                                            title="Delete">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
+
+                                        @if ($order->deleted_at)
+                                            <!-- Restore button for deleted orders -->
+                                            <form method="POST" action="{{ route('admin.order.restore', $order->id) }}"
+                                                class="inline"
+                                                onsubmit="return confirm('Are you sure you want to restore Order #{{ $order->id }}?')">
+                                                @csrf
+                                                <button type="submit" class="text-green-600 hover:text-green-800"
+                                                    title="Restore">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <!-- Delete button for active orders -->
+                                            <form method="POST" action="{{ route('admin.order.destroy', $order->id) }}"
+                                                class="inline"
+                                                onsubmit="return confirm('Are you sure you want to delete Order #{{ $order->id }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-800"
+                                                    title="Delete">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="11" class="px-6 py-4 text-center text-gray-500">
                                     No orders found
                                 </td>
                             </tr>
@@ -160,246 +238,12 @@
                 </div>
             @endif
         </div>
-
-        <!-- Order Details Modal -->
-        <div x-show="showModal" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;"
-            @click.self="showModal = false">
-            <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
-                x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
-
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-gray-900">Order Details <span
-                            x-text="selectedOrder ? '#' + selectedOrder.order_number : ''"></span></h2>
-                    <button @click="showModal = false" class="text-gray-400 hover:text-gray-600 text-2xl">
-                        ×
-                    </button>
-                </div>
-
-                <div x-show="selectedOrder" class="space-y-6">
-                    <template x-if="selectedOrder">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Customer Info -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Customer Information</h3>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <div class="space-y-2">
-                                        <div class="flex items-center space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                </path>
-                                            </svg>
-                                            <span class="font-medium" x-text="selectedOrder.customer_name"></span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
-                                                </path>
-                                            </svg>
-                                            <span x-text="selectedOrder.customer_phone"></span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                            <span x-text="selectedOrder.customer_email"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Device Info -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Device Information</h3>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <div class="space-y-2">
-                                        <div><strong>Type:</strong> <span
-                                                x-text="selectedOrder.device_brand + ' ' + selectedOrder.device_model"></span>
-                                        </div>
-                                        <div><strong>Color:</strong> <span x-text="selectedOrder.device_color"></span>
-                                        </div>
-                                        <div><strong>IMEI:</strong> <span x-text="selectedOrder.device_imei"></span></div>
-                                        <div><strong>Issue:</strong> <span x-text="selectedOrder.issue_description"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Service Info -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Service Information</h3>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <div class="space-y-2">
-                                        <div><strong>Services:</strong> <span x-text="selectedOrder.services"></span></div>
-                                        <div><strong>Technician:</strong> <span
-                                                x-text="selectedOrder.technician_name || 'Unassigned'"></span></div>
-                                        <div><strong>Estimated Time:</strong> <span
-                                                x-text="selectedOrder.estimated_time"></span></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Order Status -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Order Status</h3>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <div class="space-y-2">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="px-2 py-1 text-xs font-medium rounded-full"
-                                                :class="selectedOrder.status_color"
-                                                x-text="selectedOrder.status_label"></span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                            <span>Created: <span x-text="selectedOrder.created_at"></span></span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                            <span>Estimated Completion: <span
-                                                    x-text="selectedOrder.estimated_completion"></span></span>
-                                        </div>
-                                        <div><strong>Total Cost:</strong> $<span x-text="selectedOrder.total_price"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STT
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Order ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Total</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Order Step</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Created At</th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($orders as $order)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->user->name ?? '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->user->email ?? '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${{ number_format($order->total ?? 0, 2) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        @if ($order->status)
-                                            <span
-                                                class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Đã
-                                                thanh toán</span>
-                                        @else
-                                            <span
-                                                class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Chưa
-                                                thanh toán</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->order_step ?? '-' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->created_at->format('d/m/Y') }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
-                                        No orders found
-                                    </td>
-                                </tr>
-                            @endforelse
-                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                            Save Changes
-                            </button>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 
     <script>
         function orderManagement() {
             return {
-                showModal: false,
-                selectedOrder: null,
-                newStatus: '',
                 searchTerm: '{{ request('search') }}',
-
-                async viewOrderDetails(orderId) {
-                    try {
-                        const response = await fetch(`/${orderId}`, {
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
-
-                        if (response.ok) {
-                            this.selectedOrder = await response.json();
-                            this.newStatus = this.selectedOrder.status;
-                            this.showModal = true;
-                        }
-                    } catch (error) {
-                        console.error('Error fetching order details:', error);
-                    }
-                },
-
-                async updateOrderStatus() {
-                    if (!this.selectedOrder || !this.newStatus) return;
-
-                    try {
-                        const response = await fetch(`/${this.selectedOrder.id}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                status: this.newStatus
-                            })
-                        });
-
-                        if (response.ok) {
-                            this.showModal = false;
-                            window.location.reload();
-                        }
-                    } catch (error) {
-                        console.error('Error updating order status:', error);
-                    }
-                },
 
                 search() {
                     // Tạo form tự động submit để giữ nguyên pagination

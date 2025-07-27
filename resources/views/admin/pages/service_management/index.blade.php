@@ -67,7 +67,8 @@
         <!-- Service Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($services as $service)
-                <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div
+                    class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow {{ $service->deleted_at ? 'opacity-60 border-red-200' : '' }}">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-2">
@@ -77,6 +78,18 @@
                                     </path>
                                 </svg>
                                 <span class="text-sm font-medium text-blue-600">{{ $service->device_type_name }}</span>
+                            </div>
+                            <!-- Status Badge -->
+                            <div>
+                                @if ($service->deleted_at)
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Deleted
+                                    </span>
+                                @else
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
@@ -104,6 +117,13 @@
                                     <span class="text-sm font-medium">2-3 days</span>
                                 </div>
                             </div>
+                            @if ($service->deleted_at)
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-500">Deleted:</span>
+                                    <span
+                                        class="text-sm font-medium text-red-600">{{ $service->deleted_at->format('d/m/Y H:i') }}</span>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -111,24 +131,49 @@
                             </div>
                             <div class="flex items-center space-x-2">
                                 <a href="{{ route('admin.service.detail', ['service' => $service->id]) }}"
-                                   class="text-blue-600 hover:text-blue-800" title="View Details">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                </path>
-                                     </svg>
-                                </a>
-                                <button
-                                    @click="deleteService({{ $service->device_type_name }}, '{{ $service->device_type_name }}')"
-                                    class="text-red-600 hover:text-red-800 transition-colors" title="Delete Service">
+                                    class="text-blue-600 hover:text-blue-800" title="View Details">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
                                         </path>
                                     </svg>
-                                </button>
+                                </a>
+
+                                @if ($service->deleted_at)
+                                    <!-- Restore button for deleted services -->
+                                    <form method="POST" action="{{ route('admin.service.restore', $service->id) }}"
+                                        class="inline"
+                                        onsubmit="return confirm('Are you sure you want to restore {{ $service->issue_category_name }}?')">
+                                        @csrf
+                                        <button type="submit" class="text-green-600 hover:text-green-800"
+                                            title="Restore">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @else
+                                    <!-- Delete button for active services -->
+                                    <form method="POST" action="{{ route('admin.service.destroy', $service) }}"
+                                        class="inline"
+                                        onsubmit="return confirm('Are you sure you want to delete {{ $service->issue_category_name }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800" title="Delete">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -164,88 +209,12 @@
         @endif
 
 
-
-        <!-- Delete Confirmation Modal -->
-        <div x-show="showDeleteModal" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;"
-            @click.self="showDeleteModal = false">
-            <div class="bg-white rounded-lg p-6 w-full max-w-md">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Deletion</h3>
-                <p class="text-gray-600 mb-6">
-                    Are you sure you want to delete the service <strong x-text="serviceToDelete.name"></strong>?
-                    This action cannot be undone.
-                </p>
-                <div class="flex justify-end space-x-2">
-                    <button @click="showDeleteModal = false"
-                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </button>
-                    <button @click="confirmDelete()"
-                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
         function serviceManagement() {
             return {
-                showDeleteModal: false,
-                serviceToDelete: null,
-                searchTerm: '{{ request('
-                                                            search ') }}',
-
-                async toggleServiceStatus(serviceId) {
-                    try {
-                        const response = await fetch(`/${serviceId}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
-
-                        if (response.ok) {
-                            window.location.reload();
-                        }
-                    } catch (error) {
-                        console.error('Error toggling service status:', error);
-                    }
-                },
-
-                deleteService(serviceId, serviceName) {
-                    this.serviceToDelete = {
-                        id: serviceId,
-                        name: serviceName
-                    };
-                    this.showDeleteModal = true;
-                },
-
-                async confirmDelete() {
-                    try {
-                        const response = await fetch(`/${this.serviceToDelete.id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
-
-                        if (response.ok) {
-                            this.showDeleteModal = false;
-                            window.location.reload();
-                        }
-                    } catch (error) {
-                        console.error('Error deleting service:', error);
-                    }
-                },
+                searchTerm: '{{ request('search') }}',
 
                 search() {
                     // Tạo form tự động submit để giữ nguyên pagination và filters

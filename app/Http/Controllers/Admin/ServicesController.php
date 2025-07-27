@@ -14,11 +14,11 @@ class ServicesController extends Controller
 {
     public function index(Request $request)
     {
-        // Lấy danh sách loại thiết bị (không bị trùng)
-        $deviceTypes = Services::select('device_type_name')->distinct()->get();
+        // Lấy danh sách loại thiết bị (không bị trùng) bao gồm cả soft deleted
+        $deviceTypes = Services::withTrashed()->select('device_type_name')->distinct()->get();
 
-        // Sử dụng Eloquent để tạo truy vấn lấy dữ liệu
-        $query = Services::query();
+        // Sử dụng Eloquent để tạo truy vấn lấy dữ liệu bao gồm cả soft deleted
+        $query = Services::withTrashed();
 
         // Tìm kiếm nếu có search term
         if ($request->filled('search')) {
@@ -85,5 +85,36 @@ class ServicesController extends Controller
         return redirect()
             ->route('admin.service.index')
             ->with('success', 'Service created successfully!');
+    }
+
+    public function destroy(Services $service)
+    {
+        try {
+            // Soft delete service
+            $service->delete();
+
+            return redirect()->route('admin.service.index')
+                ->with('success', 'Service has been deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.service.index')
+                ->with('error', 'Failed to delete service. Please try again.');
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            // Find the soft-deleted service by ID
+            $service = Services::withTrashed()->findOrFail($id);
+
+            // Restore service
+            $service->restore();
+
+            return redirect()->route('admin.service.index')
+                ->with('success', 'Service has been restored successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.service.index')
+                ->with('error', 'Failed to restore service. Please try again.');
+        }
     }
 }

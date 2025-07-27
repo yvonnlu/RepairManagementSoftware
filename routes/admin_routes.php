@@ -23,8 +23,6 @@ Route::prefix('admin/customer')
         Route::post('store', 'store')->name('store');
         Route::delete('destroy/{customer}', 'destroy')->name('destroy');
         Route::post('restore/{id}', 'restore')->name('restore');
-
-        Route::get('restore/{customer}', 'restore')->name('restore');
     });
 
 
@@ -39,6 +37,8 @@ Route::prefix('admin/order')
         Route::patch('update-service-step/{order}', 'updateServiceStep')->name('updateServiceStep');
         Route::get('create', 'create')->name('create');
         Route::post('store', 'store')->name('store');
+        Route::delete('destroy/{order}', 'destroy')->name('destroy');
+        Route::post('restore/{id}', 'restore')->name('restore');
     });
 
 Route::prefix('admin/service')
@@ -51,6 +51,8 @@ Route::prefix('admin/service')
         Route::post('update/{service}', 'update')->name('update');
         Route::get('create', 'create')->name('create');
         Route::post('store', 'store')->name('store');
+        Route::delete('destroy/{service}', 'destroy')->name('destroy');
+        Route::post('restore/{id}', 'restore')->name('restore');
     });
 
 

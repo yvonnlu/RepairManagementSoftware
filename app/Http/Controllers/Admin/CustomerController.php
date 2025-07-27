@@ -59,12 +59,13 @@ class CustomerController extends Controller
     public function restore($id)
     {
         try {
-            // Tìm user đã soft delete
-            $customer = User::onlyTrashed()->findOrFail($id);
+            // Find the soft-deleted customer by ID
+            $customer = User::withTrashed()->findOrFail($id);
 
             // Kiểm tra email đã tồn tại cho user khác chưa
             $existingUser = User::where('email', $customer->email)
                 ->whereNull('deleted_at')
+                ->where('id', '!=', $customer->id)
                 ->exists();
 
             if ($existingUser) {
