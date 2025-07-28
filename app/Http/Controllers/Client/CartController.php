@@ -191,9 +191,15 @@ class CartController extends Controller
     }
     public function placeOrder(Request $request)
     {
-        // Debug: check cart and request data
-        // dd($cart, $request->all());
-        // dd($request->all(), session()->get('cart', []));
+        $startTime = microtime(true);
+
+        // Debug: Log request info
+        Log::info('Checkout started', [
+            'service_id' => $request->input('service_id'),
+            'payment_method' => $request->input('payment_method'),
+            'has_cart' => !empty(session()->get('cart', []))
+        ]);
+
         //Validation
         $validated = $request->validate([
             'name'          => 'required|string|max:255',
@@ -208,9 +214,15 @@ class CartController extends Controller
 
             $total = 0;
             $cart = session()->get('cart', []);
-            // Nếu cart rỗng nhưng có service_id (đặt hàng trực tiếp từ service)
+
+            // Optimize: Handle service_id case more efficiently
             if (empty($cart) && $request->has('service_id')) {
-                $service = Services::findOrFail($request->input('service_id'));
+                $serviceId = $request->input('service_id');
+
+                // Use select to get only needed fields
+                $service = Services::select('id', 'device_type_name', 'issue_category_name', 'base_price')
+                    ->findOrFail($serviceId);
+
                 $cart = [
                     $service->id => [
                         'device_type_name' => $service->device_type_name,
@@ -220,8 +232,10 @@ class CartController extends Controller
                     ]
                 ];
             }
-            // Nếu cart vẫn rỗng thì không tạo order, trả về view empty_cart và dừng hàm
+
+            // Early exit if still no cart
             if (empty($cart)) {
+                DB::rollBack();
                 return view('website.pages.empty_cart');
             }
             foreach ($cart as $item) {
@@ -267,75 +281,28 @@ class CartController extends Controller
 
             DB::commit();
 
-            // Gửi mail cho customer và admin với mọi phương thức thanh toán
+            // Gửi mail background để không block checkout
             try {
+                // Use sync send instead of queue for faster processing
                 Mail::to('nguyetnghialu@gmail.com')->send(new OrderEmailCustomer($order));
                 Mail::to('lunguyetnghia@gmail.com')->send(new OrderEmailAdmin($order));
             } catch (\Exception $mailEx) {
                 Log::error('Mail send failed: ' . $mailEx->getMessage());
+                // Don't block checkout if email fails
             }
 
             //Empty cart
             session()->put('cart', []);
 
-            //Minus qty of product
-            foreach ($order->orderItems as $orderItem) {
-                $service = Services::find($orderItem->service_id);
-                // $service->qty -= $orderItem->qty;
-                $service->save();
-            }
-
             if ($request->payment_method === 'vnpay') {
-                date_default_timezone_set('Asia/Ho_Chi_Minh');
-                $startTime = date("YmdHis");
-                $expire = date('YmdHis', strtotime('+15 minutes', strtotime($startTime)));
+                $processTime = round((microtime(true) - $startTime) * 1000, 2);
+                Log::info('Order processed, redirecting to VNPay', [
+                    'order_id' => $order->id,
+                    'process_time_ms' => $processTime
+                ]);
 
-                $vnp_TxnRef = $order->id;
-                $vnp_Amount = $order->total;
-                $vnp_Locale = 'vn';
-                $vnp_BankCode = 'VNBANK';
-                $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-                $vnp_HashSecret = env('VNPAY_HASHSECRET');
-
-                $inputData = array(
-                    "vnp_Version" => "2.1.0",
-                    "vnp_TmnCode" => env('VNPAY_TMNCODE'),
-                    "vnp_Amount" => $vnp_Amount * 100 * 23500,
-                    "vnp_Command" => "pay",
-                    "vnp_CreateDate" => date('YmdHis'),
-                    "vnp_CurrCode" => "VND",
-                    "vnp_IpAddr" => $vnp_IpAddr,
-                    "vnp_Locale" => $vnp_Locale,
-                    "vnp_OrderInfo" => "Thanh toan GD:" . $vnp_TxnRef,
-                    "vnp_OrderType" => "other",
-                    "vnp_ReturnUrl" => env('VNPAY_RETURNURL'),
-                    "vnp_TxnRef" => $vnp_TxnRef,
-                    "vnp_ExpireDate" => $expire,
-                    "vnp_BankCode" => $vnp_BankCode,
-                );
-
-                ksort($inputData);
-                $query = "";
-                $i = 0;
-                $hashdata = "";
-                foreach ($inputData as $key => $value) {
-                    if ($i == 1) {
-                        $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-                    } else {
-                        $hashdata .= urlencode($key) . "=" . urlencode($value);
-                        $i = 1;
-                    }
-                    $query .= urlencode($key) . "=" . urlencode($value) . '&';
-                }
-
-                $vnp_Url = env('VNPAY_URL') . "?" . $query;
-
-                if (isset($vnp_HashSecret)) {
-                    $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret); //  
-                    $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
-                }
-
-                return redirect()->to($vnp_Url);
+                // Optimize VNPay redirect
+                return $this->redirectToVnpay($order);
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -387,5 +354,66 @@ class CartController extends Controller
         return view('client.pages.orders', [
             'orderList' => $orderList,
         ]);
+    }
+
+    /**
+     * Optimized VNPay redirect method
+     */
+    private function redirectToVnpay(Order $order)
+    {
+        try {
+            $vnp_TxnRef = $order->id;
+            $vnp_Amount = $order->total * 100 * 23500; // Convert to VND
+            $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
+
+            $inputData = [
+                "vnp_Version" => "2.1.0",
+                "vnp_TmnCode" => env('VNPAY_TMNCODE'),
+                "vnp_Amount" => $vnp_Amount,
+                "vnp_Command" => "pay",
+                "vnp_CreateDate" => date('YmdHis'),
+                "vnp_CurrCode" => "VND",
+                "vnp_IpAddr" => $vnp_IpAddr,
+                "vnp_Locale" => "vn",
+                "vnp_OrderInfo" => "Thanh toan GD:" . $vnp_TxnRef,
+                "vnp_OrderType" => "other",
+                "vnp_ReturnUrl" => env('VNPAY_RETURNURL'),
+                "vnp_TxnRef" => $vnp_TxnRef,
+                "vnp_ExpireDate" => date('YmdHis', strtotime('+15 minutes')),
+                "vnp_BankCode" => "VNBANK",
+            ];
+
+            ksort($inputData);
+            $hashdata = http_build_query($inputData);
+            $query = http_build_query($inputData);
+
+            $vnp_Url = env('VNPAY_URL') . "?" . $query;
+
+            $vnp_HashSecret = env('VNPAY_HASHSECRET');
+            if ($vnp_HashSecret) {
+                $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+                $vnp_Url .= '&vnp_SecureHash=' . $vnpSecureHash;
+            }
+
+            // Log for debugging
+            Log::info('VNPay redirect URL generated', [
+                'order_id' => $order->id,
+                'amount' => $vnp_Amount,
+                'url_length' => strlen($vnp_Url)
+            ]);
+
+            return redirect()->to($vnp_Url);
+        } catch (\Exception $e) {
+            Log::error('VNPay redirect failed', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+
+            // Fallback to order success page with error message
+            return view('website.pages.order_failed', [
+                'error' => 'Payment gateway error. Please try again or contact support.',
+                'payment_method' => 'vnpay',
+            ]);
+        }
     }
 }

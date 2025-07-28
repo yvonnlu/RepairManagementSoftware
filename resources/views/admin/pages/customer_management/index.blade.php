@@ -6,7 +6,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-gray-900">Customer Management</h1>
-            <a href=""
+            <a href="{{ route('admin.customer.create') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -15,36 +15,7 @@
             </a>
         </div>
 
-        <!-- Modal Success Notification -->
-        @if (session('success'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <strong class="font-bold">Success!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
-                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
-                    <svg class="fill-current h-6 w-6 text-green-500" role="button" viewBox="0 0 20 20">
-                        <title>Close</title>
-                        <path
-                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
-                    </svg>
-                </span>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                <strong class="font-bold">Error!</strong>
-                <span class="block sm:inline">{{ session('error') }}</span>
-                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
-                    <svg class="fill-current h-6 w-6 text-red-500" role="button" viewBox="0 0 20 20">
-                        <title>Close</title>
-                        <path
-                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
-                    </svg>
-                </span>
-            </div>
-        @endif
+        <x-alert />
 
         <!-- Search and Filter -->
         <div class="bg-white p-6 rounded-lg shadow-sm border">

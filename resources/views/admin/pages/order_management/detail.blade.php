@@ -1,6 +1,8 @@
 @extends('admin.layout.app')
 
 @section('content')
+    <x-alert />
+
     <div class="max-w-6xl mx-auto mt-8 bg-white rounded-lg shadow p-8">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold">Order Details #{{ $order->id }}</h1>
@@ -19,6 +21,16 @@
                             ✅ Completed</option>
                         <option value="Cancelled" {{ ($order->service_step ?? '') == 'Cancelled' ? 'selected' : '' }}>
                             ❌ Cancelled</option>
+                    </select>
+                </form>
+                <form method="POST" action="{{ route('admin.order.updatePaymentStatus', $order->id) }}" class="inline">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status" onchange="this.form.submit()"
+                        class="border-2 border-green-300 bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 font-semibold rounded-lg px-4 py-2 shadow-md hover:shadow-lg transition-all duration-200 focus:ring-4 focus:ring-green-200 focus:border-green-500">
+                        <option value="pending" {{ ($order->status ?? 'pending') == 'pending' ? 'selected' : '' }}>💳 Unpaid
+                        </option>
+                        <option value="success" {{ ($order->status ?? '') == 'success' ? 'selected' : '' }}>✅ Paid</option>
                     </select>
                 </form>
                 <a href="{{ route('admin.order.index') }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Back to
@@ -98,9 +110,9 @@
                         <span class="text-gray-600">Payment Status:</span>
                         <span
                             class="px-2 py-1 rounded-full text-xs font-medium
-                        @if ($order->status) bg-green-100 text-green-800
+                        @if ($order->status == 'success') bg-green-100 text-green-800
                         @else bg-red-100 text-red-800 @endif">
-                            {{ $order->status ? 'Paid' : 'Unpaid' }}
+                            {{ $order->status == 'success' ? 'Paid' : 'Unpaid' }}
                         </span>
                     </div>
                     <div class="flex justify-between">
@@ -154,9 +166,15 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Item</th>
+                                    Order Item ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Device Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Issue Category</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Description</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Notes</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Quantity</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -168,18 +186,64 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($order->orderItems as $item)
                                 <tr>
+                                    <!-- Order Item ID -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ $item->item_name ?? 'Item #' . $item->id }}
+                                        #{{ $item->id }}
                                     </td>
+
+                                    <!-- Device Type -->
                                     <td class="px-6 py-4 text-sm text-gray-500">
-                                        {{ $item->description ?? '-' }}
+                                        @if ($item->custom_device_type)
+                                            {{ $item->custom_device_type }}
+                                        @elseif($item->service && $item->service->device_type_name)
+                                            {{ $item->service->device_type_name }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
+
+                                    <!-- Issue Category -->
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        @if ($item->custom_issue_category)
+                                            {{ $item->custom_issue_category }}
+                                        @elseif($item->service && $item->service->issue_category_name)
+                                            {{ $item->service->issue_category_name }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
+                                    <!-- Description -->
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        @if ($item->custom_description)
+                                            {{ $item->custom_description }}
+                                        @elseif($item->service && $item->service->description)
+                                            {{ $item->service->description }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
+                                    <!-- Notes -->
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        @if ($item->service)
+                                            {{ $order->note ?? '-' }}
+                                        @else
+                                            {{ $item->custom_note ?? '-' }}
+                                        @endif
+                                    </td>
+
+                                    <!-- Quantity -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $item->quantity ?? 1 }}
+                                        {{ $item->qty ?? ($item->quantity ?? 1) }}
                                     </td>
+
+                                    <!-- Price -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $item->price ? '$' . number_format($item->price, 2) : '-' }}
                                     </td>
+
+                                    <!-- Total -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $item->total ? '$' . number_format($item->total, 2) : '-' }}
                                     </td>

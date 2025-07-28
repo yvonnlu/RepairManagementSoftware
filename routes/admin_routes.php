@@ -35,6 +35,7 @@ Route::prefix('admin/order')
         Route::get('detail/{order}', 'detail')->name('detail');
         Route::post('update/{order}', 'update')->name('update');
         Route::patch('update-service-step/{order}', 'updateServiceStep')->name('updateServiceStep');
+        Route::patch('update-payment-status/{order}', 'updatePaymentStatus')->name('updatePaymentStatus');
         Route::get('create', 'create')->name('create');
         Route::post('store', 'store')->name('store');
         Route::delete('destroy/{order}', 'destroy')->name('destroy');

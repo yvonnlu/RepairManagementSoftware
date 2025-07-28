@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class CustomerController extends Controller
 {
@@ -81,6 +83,53 @@ class CustomerController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('admin.customer.index')
                 ->with('error', 'Failed to restore customer. Please try again.');
+        }
+    }
+
+    public function create()
+    {
+        return view('admin.pages.customer_management.create');
+    }
+
+    public function store(Request $request)
+    {
+        // Validation rules
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'phone_number' => 'nullable|numeric|digits_between:10,15',
+            'address' => 'nullable|string|max:500',
+        ], [
+            'name.required' => 'Full name is required.',
+            'email.required' => 'Email address is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address is already registered.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 8 characters long.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'phone_number.numeric' => 'Phone number must contain only numbers.',
+            'phone_number.digits_between' => 'Phone number must be between 10 and 15 digits.',
+            'address.max' => 'Address cannot exceed 500 characters.',
+        ]);
+
+        try {
+            // Create new user
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']),
+                'phone_number' => $validatedData['phone_number'] ?? null,
+                'address' => $validatedData['address'] ?? null,
+                'email_verified_at' => now(), // Auto verify for admin-created users
+            ]);
+
+            return redirect()->route('admin.customer.index')
+                ->with('success', 'Customer "' . $user->name . '" has been created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create customer. Please try again.');
         }
     }
 }

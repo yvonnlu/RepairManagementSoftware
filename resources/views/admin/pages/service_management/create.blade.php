@@ -128,17 +128,25 @@
                         <textarea id="description" name="description"
                             class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 min-h-[120px] resize-none"
                             placeholder="Enter service description..." rows="4">{{ old('description') }}</textarea>
-                            @error('description')
+                        @error('description')
                             <div class="text-red-500">{{ $message }}</div>
                         @enderror
-                            <div class="flex justify-between text-sm text-slate-500 mt-1">
-                                <span>Provide detailed information about this service</span>
-                                <span><span id="char-count">{{ strlen(old('description', '')) }}</span>/1000</span>
-                            </div>
+                        <div class="flex justify-between text-sm text-slate-500 mt-1">
+                            <span>Provide detailed information about this service</span>
+                            <span><span id="char-count">{{ strlen(old('description', '')) }}</span>/1000</span>
+                        </div>
                     </div>
 
                     {{-- Action Buttons --}}
-                    <div class="flex justify-end pt-6 border-t border-slate-100">
+                    <div class="flex gap-4 justify-end pt-6 border-t border-slate-100">
+                        <a href="{{ route('admin.service.index') }}"
+                            class="inline-flex items-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-8 py-3 rounded-xl transition-all duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancel
+                        </a>
                         <button type="submit"
                             class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,20 +161,20 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const textarea = document.getElementById('description');
             const charCount = document.getElementById('char-count');
-    
+
             function updateCharCount() {
                 charCount.textContent = textarea.value.length;
             }
-    
+
             // Cập nhật ngay khi load trang (ví dụ khi validation fail)
             updateCharCount();
-    
+
             // Cập nhật mỗi lần gõ
             textarea.addEventListener('input', updateCharCount);
         });
     </script>
-    
+
 @endsection
