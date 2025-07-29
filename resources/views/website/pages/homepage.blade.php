@@ -844,53 +844,82 @@
                             Send Quote Request
                         </h3>
 
-                        <form id="contact-form" class="space-y-6">
+                        <!-- Success/Error Messages -->
+                        @if(session('success'))
+                            <div class="mb-6 bg-green-500/20 border border-green-500/30 text-green-100 px-4 py-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+                                    <span>{{ session('success') }}</span>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="mb-6 bg-red-500/20 border border-red-500/30 text-red-100 px-4 py-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
+                                    <span>{{ session('error') }}</span>
+                                </div>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('client.quote-request.store') }}" method="POST" class="space-y-6">
+                            @csrf
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-blue-100 mb-2">Full
-                                        Name *</label>
-                                    <input type="text" id="name" name="name" required
-                                        class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm"
+                                    <label for="name" class="block text-sm font-medium text-blue-100 mb-2">Full Name *</label>
+                                    <input type="text" id="name" name="name" required value="{{ old('name') }}"
+                                        class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('name') border-red-500 @enderror"
                                         placeholder="Enter your full name">
+                                    @error('name')
+                                        <span class="text-red-300 text-sm">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-blue-100 mb-2">Email
-                                        *</label>
-                                    <input type="email" id="email" name="email" required
-                                        class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm"
+                                    <label for="email" class="block text-sm font-medium text-blue-100 mb-2">Email *</label>
+                                    <input type="email" id="email" name="email" required value="{{ old('email') }}"
+                                        class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('email') border-red-500 @enderror"
                                         placeholder="email@example.com">
+                                    @error('email')
+                                        <span class="text-red-300 text-sm">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div>
-                                <label for="phone" class="block text-sm font-medium text-blue-100 mb-2">Phone
-                                    Number *</label>
-                                <input type="tel" id="phone" name="phone" required
-                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm"
-                                    placeholder="+1-555-123-4567">
+                                <label for="phone" class="block text-sm font-medium text-blue-100 mb-2">Phone Number</label>
+                                <input type="number" id="phone" name="phone" value="{{ old('phone') }}"
+                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('phone') border-red-500 @enderror"
+                                    placeholder="1234567890">
+                                @error('phone')
+                                    <span class="text-red-300 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div>
-                                <label for="deviceType" class="block text-sm font-medium text-blue-100 mb-2">Device
-                                    Type</label>
-                                <select id="deviceType" name="deviceType"
-                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white backdrop-blur-sm">
+                                <label for="device_type" class="block text-sm font-medium text-blue-100 mb-2">Device Type *</label>
+                                <select id="device_type" name="device_type" required
+                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white backdrop-blur-sm @error('device_type') border-red-500 @enderror">
                                     <option value="" class="bg-gray-800">Select device type</option>
-                                    <option value="smartphone" class="bg-gray-800">Smartphone</option>
-                                    <option value="laptop" class="bg-gray-800">Laptop</option>
-                                    <option value="tablet" class="bg-gray-800">Tablet</option>
-                                    <option value="desktop" class="bg-gray-800">Desktop Computer</option>
-                                    <option value="smartwatch" class="bg-gray-800">Smartwatch</option>
-                                    <option value="other" class="bg-gray-800">Other</option>
+                                    @foreach($deviceTypes as $deviceType)
+                                        <option value="{{ $deviceType->device_type_name }}" class="bg-gray-800" {{ old('device_type') == $deviceType->device_type_name ? 'selected' : '' }}>
+                                            {{ $deviceType->device_type_name }}
+                                        </option>
+                                    @endforeach
                                 </select>
+                                @error('device_type')
+                                    <span class="text-red-300 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div>
-                                <label for="message" class="block text-sm font-medium text-blue-100 mb-2">Issue
-                                    Description</label>
-                                <textarea id="message" name="message" rows="4"
-                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm"
-                                    placeholder="Describe the device issue in detail..."></textarea>
+                                <label for="issue" class="block text-sm font-medium text-blue-100 mb-2">Issue Description</label>
+                                <textarea id="issue" name="issue" rows="4"
+                                    class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('issue') border-red-500 @enderror"
+                                    placeholder="Describe the device issue in detail...">{{ old('issue') }}</textarea>
+                                @error('issue')
+                                    <span class="text-red-300 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <button type="submit"
@@ -1010,13 +1039,6 @@
             closeServiceModal();
         }
 
-        // Contact form
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for contacting us! We will respond within 15 minutes.');
-            this.reset();
-        });
-
         // Close modal when clicking outside
         document.getElementById('service-modal').addEventListener('click', function(e) {
             if (e.target === this) {
@@ -1027,6 +1049,15 @@
         // Initialize icons after page load
         document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();
+            
+            // Scroll to form if there are flash messages
+            @if(session('success') || session('error') || $errors->any())
+                document.getElementById('contact').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            @endif
+            
             // Filter services by device type
             const categoryFilters = document.querySelectorAll('.category-filter');
             const serviceCategories = document.querySelectorAll('.service-category');

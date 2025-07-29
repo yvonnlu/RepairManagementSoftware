@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\QuoteRequestController;
 
 use App\Http\Middleware\CheckIsClient;
 use App\Mail\TestEmailTemplate;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Mail;
 
 
 use Illuminate\Support\Facades\Route;
+
+// Quote Request Route (Public - không cần authentication)
+Route::post('/quote-request', [QuoteRequestController::class, 'store'])->name('client.quote-request.store');
 
 Route::get('client/profile', [CartController::class, 'show'])->name('client.profile')->middleware(CheckIsClient::class);
 

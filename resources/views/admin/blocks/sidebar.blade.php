@@ -24,6 +24,12 @@
             'icon' => 'shopping-cart',
             'route' => 'admin.order.index',
         ],
+        [
+            'id' => 'quote-requests',
+            'label' => 'Quote Requests',
+            'icon' => 'file-text',
+            'route' => 'admin.quote-requests.index',
+        ],
         // [
         //     'id' => 'technicians',
         //     'label' => 'Technicians',

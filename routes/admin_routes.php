@@ -1,14 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\admin\OrderController;
+use App\Http\Controllers\Admin\QuoteRequestController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::get('admin/dashboard', function () {
-    return view('admin.pages.dashboard');
-})->name('admin.dashboard')->middleware(CheckIsAdmin::class);
+Route::get('admin/dashboard', [DashboardController::class, 'index'])
+    ->name('admin.dashboard')
+    ->middleware(CheckIsAdmin::class);
 
 
 Route::prefix('admin/customer')
@@ -61,6 +63,20 @@ Route::prefix('admin/service')
 Route::get('admin/orderlist', function () {
     return view('admin.pages.order_management.list');
 })->name('admin.orderlist')->middleware(CheckIsAdmin::class);
+
+// Quote Requests Routes
+Route::prefix('admin/quote-requests')
+    ->controller(QuoteRequestController::class)
+    ->name('admin.quote-requests.')
+    ->middleware(CheckIsAdmin::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{quoteRequest}', 'show')->name('show');
+        Route::put('/{quoteRequest}', 'update')->name('update');
+        Route::delete('/{quoteRequest}', 'destroy')->name('destroy');
+    });
 
 Route::get('admin/technicianlist', function () {
     return view('admin.pages.technician_management.list');
