@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\Admin\QuoteRequestController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +64,22 @@ Route::prefix('admin/service')
 Route::get('admin/orderlist', function () {
     return view('admin.pages.order_management.list');
 })->name('admin.orderlist')->middleware(CheckIsAdmin::class);
+
+// Inventory Management Routes
+Route::prefix('admin/inventory')
+    ->controller(InventoryController::class)
+    ->name('admin.inventory.')
+    ->middleware(CheckIsAdmin::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/detail/{part}', 'detail')->name('detail');
+        Route::post('/update/{part}', 'update')->name('update');
+        Route::delete('/{part}', 'destroy')->name('destroy');
+        Route::post('/{part}/add-stock', 'addStock')->name('addStock');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
 
 // Quote Requests Routes
 Route::prefix('admin/quote-requests')

@@ -40,7 +40,7 @@
             'id' => 'inventory',
             'label' => 'Inventory',
             'icon' => 'archive',
-            'route' => 'admin.inventorylist',
+            'route' => 'admin.inventory.index',
         ],
         // [
         //     'id' => 'appointments',

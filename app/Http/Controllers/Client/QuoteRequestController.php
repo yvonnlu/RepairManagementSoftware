@@ -29,10 +29,10 @@ class QuoteRequestController extends Controller
         try {
             // Log incoming request data
             Log::info('Quote request submission attempt:', $request->all());
-            
+
             // Check if user exists with this email for admin reference only
             $existingUser = \App\Models\User::where('email', $request->email)->first();
-            
+
             // Always use the information provided in the request form
             $quoteRequest = QuoteRequest::create([
                 'name' => $request->name,
@@ -57,7 +57,6 @@ class QuoteRequestController extends Controller
             }
 
             return redirect()->back()->with('success', $message);
-
         } catch (\Exception $e) {
             // Log the error for debugging
             Log::error('Quote request submission failed:', [
@@ -65,7 +64,7 @@ class QuoteRequestController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->all()
             ]);
-            
+
             return redirect()->back()->with('error', 'Failed to submit quote request. Please try again.');
         }
     }

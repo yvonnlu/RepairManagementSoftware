@@ -23,10 +23,10 @@ class QuoteRequestController extends Controller
 
         // Search by name, email, or device type
         if ($request->has('search') && $request->search !== '') {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%')
-                  ->orWhere('device_type', 'like', '%' . $request->search . '%');
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('device_type', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -68,7 +68,7 @@ class QuoteRequestController extends Controller
         QuoteRequest::create($validated);
 
         return redirect()->route('admin.quote-requests.index')
-                        ->with('success', 'Quote request created successfully.');
+            ->with('success', 'Quote request created successfully.');
     }
 
     /**
@@ -98,7 +98,7 @@ class QuoteRequestController extends Controller
         $quoteRequest->update($validated);
 
         return redirect()->route('admin.quote-requests.show', $quoteRequest)
-                        ->with('success', 'Quote request updated successfully.');
+            ->with('success', 'Quote request updated successfully.');
     }
 
     /**
@@ -109,6 +109,6 @@ class QuoteRequestController extends Controller
         $quoteRequest->delete();
 
         return redirect()->route('admin.quote-requests.index')
-                        ->with('success', 'Quote request deleted successfully.');
+            ->with('success', 'Quote request deleted successfully.');
     }
 }

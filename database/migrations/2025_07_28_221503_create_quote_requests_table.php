@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('admin_notes')->nullable();
             $table->foreignId('converted_order_id')->nullable()->constrained('orders')->onDelete('set null');
             $table->timestamps();
-            
+
             $table->index(['status', 'created_at']);
             $table->index('email');
         });

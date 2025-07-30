@@ -128,20 +128,20 @@
                         </div>
                     </div>
                     ${service.warranty ? `
-                    <div class="bg-purple-50 p-4 rounded-xl">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i>
-                            <span class="text-purple-600 font-medium">Warranty</span>
+                        <div class="bg-purple-50 p-4 rounded-xl">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i>
+                                <span class="text-purple-600 font-medium">Warranty</span>
+                            </div>
+                            <p class="text-purple-700 font-semibold">${service.warranty}</p>
                         </div>
-                        <p class="text-purple-700 font-semibold">${service.warranty}</p>
-                    </div>
-                    ` : ''}
+                        ` : ''}
                     ${includes ? `
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Service Includes:</h3>
-                        <div class="space-y-2">${includes}</div>
-                    </div>
-                    ` : ''}
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Service Includes:</h3>
+                            <div class="space-y-2">${includes}</div>
+                        </div>
+                        ` : ''}
                 </div>
                 <div class="p-6 bg-gray-50 rounded-b-2xl">
                     <div class="flex flex-col sm:flex-row gap-3">

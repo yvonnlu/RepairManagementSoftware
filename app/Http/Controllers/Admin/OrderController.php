@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -95,17 +96,50 @@ class OrderController extends Controller
 
             $order = Order::findOrFail($orderId);
             $oldStep = $order->service_step;
-            $order->service_step = $request->service_step;
+            $newStep = $request->service_step;
+            
+            $order->service_step = $newStep;
             $saved = $order->save();
 
             if ($saved) {
+                // Initialize inventory service
+                $inventoryService = new InventoryService();
+
+                // Handle inventory stock based on service step changes
+                if ($newStep === 'Completed' && $oldStep !== 'Completed') {
+                    // Order just completed - deduct stock
+                    $stockProcessed = $inventoryService->processCompletedOrderStock($order);
+                    
+                    if (!$stockProcessed) {
+                        Log::warning('Inventory stock processing failed for completed order', [
+                            'order_id' => $orderId
+                        ]);
+                        // Don't fail the service step update, just log the warning
+                    }
+                } elseif ($oldStep === 'Completed' && $newStep !== 'Completed') {
+                    // Order was completed but now changed to different status - restore stock
+                    $stockRestored = $inventoryService->restoreOrderStock($order);
+                    
+                    if (!$stockRestored) {
+                        Log::warning('Inventory stock restoration failed for reverted order', [
+                            'order_id' => $orderId
+                        ]);
+                    }
+                }
+
                 Log::info('Service step updated successfully', [
                     'order_id' => $orderId,
                     'old_step' => $oldStep,
                     'new_step' => $order->service_step
                 ]);
 
-                return redirect()->back()->with('success', 'Service step updated successfully from "' . ($oldStep ?? 'New Order') . '" to "' . $order->service_step . '"');
+                $successMessage = 'Service step updated successfully from "' . ($oldStep ?? 'New Order') . '" to "' . $order->service_step . '"';
+                
+                if ($newStep === 'Completed') {
+                    $successMessage .= '. Inventory stock has been updated accordingly.';
+                }
+
+                return redirect()->back()->with('success', $successMessage);
             } else {
                 return redirect()->back()->with('error', 'Failed to update service step. Please try again.');
             }
@@ -167,7 +201,7 @@ class OrderController extends Controller
 
                     Log::info('Payment confirmation emails queued for order', ['order_id' => $order->id]);
 
-                    return redirect()->back()->with('success', 'Payment status updated to "' . ucfirst($request->status === 'success' ? 'Paid' : 'Unpaid') . '" and confirmation emails sent successfully!');
+                    return redirect()->back()->with('success', 'Payment status updated to "Paid" and confirmation emails sent successfully!');
                 } catch (\Exception $e) {
                     Log::error('Failed to send payment confirmation emails', [
                         'order_id' => $order->id,

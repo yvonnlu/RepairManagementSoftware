@@ -49,7 +49,7 @@ class QuoteRequest extends Model
     // Accessors
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => 'bg-yellow-100 text-yellow-800',
             'quoted' => 'bg-blue-100 text-blue-800',
             'completed' => 'bg-green-100 text-green-800',
@@ -60,7 +60,7 @@ class QuoteRequest extends Model
 
     public function getStatusDisplayAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => 'Pending',
             'quoted' => 'Quoted',
             'completed' => 'Completed',
