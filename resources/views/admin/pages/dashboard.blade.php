@@ -77,7 +77,7 @@
         </div>
 
         <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach ($stats as $stat)
                 <div class="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between mb-4">
@@ -108,108 +108,75 @@
             @endforeach
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Recent Orders -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border">
-                <div class="p-6 border-b">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
-                        <a href="{{ route('admin.order.index') }}"
-                            class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            View All
-                        </a>
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Order</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Customer</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Device & Issue</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ETA</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($recentOrders as $order)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">#{{ $order->id }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $order->user->name ?? 'N/A' }}</div>
-                                        <div class="text-sm text-gray-500">{{ $order->created_at->diffForHumans() }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
-                                            @if ($order->orderItems->first()?->service)
-                                                {{ $order->orderItems->first()->service->device_type_name ?? '' }}
-                                            @else
-                                                {{ $order->orderItems->first()?->custom_device_type ?? '' }}
-                                            @endif
-                                        </div>
-                                        <div class="text-sm text-gray-500">
-                                            @if ($order->orderItems->first()?->service)
-                                                {{ $order->orderItems->first()->service->issue_category_name ?? '' }}
-                                            @else
-                                                {{ $order->orderItems->first()?->custom_issue_category ?? '' }}
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2 py-1 text-xs font-medium rounded-full {{ getStatusColor($order->service_step ?? 'in progress') }}">
-                                            {{ ucfirst($order->service_step ?? 'in progress') }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->created_at->format('d/m/Y H:i') }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Technician Performance -->
-            {{-- <div class="bg-white rounded-xl shadow-sm border">
+        <!-- Recent Orders -->
+        <div class="bg-white rounded-xl shadow-sm border">
             <div class="p-6 border-b">
-                <h2 class="text-lg font-semibold text-gray-900">Technician Performance</h2>
-            </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    @foreach ($technicianPerformance as $tech)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-3 h-3 rounded-full {{ getTechStatusColor($tech['status']) }}"></div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900">{{ $tech['name'] }}</p>
-                                    <p class="text-xs text-gray-500">{{ $tech['repairs'] }} repairs this week</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div class="flex items-center space-x-1">
-                                    <svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                    </svg>
-                                    <span class="text-xs text-gray-600">{{ $tech['rating'] }}</span>
-                                </div>
-                                <p class="text-xs text-gray-500">{{ $tech['efficiency'] }}% efficiency</p>
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
+                    <a href="{{ route('admin.order.index') }}"
+                        class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        View All
+                    </a>
                 </div>
             </div>
-        </div> --}}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Order</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Device & Issue</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ETA</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach ($recentOrders as $order)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">#{{ $order->id }}</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $order->user->name ?? 'N/A' }}</div>
+                                    <div class="text-sm text-gray-500">{{ $order->created_at->diffForHumans() }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">
+                                        @if ($order->orderItems->first()?->service)
+                                            {{ $order->orderItems->first()->service->device_type_name ?? '' }}
+                                        @else
+                                            {{ $order->orderItems->first()?->custom_device_type ?? '' }}
+                                        @endif
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        @if ($order->orderItems->first()?->service)
+                                            {{ $order->orderItems->first()->service->issue_category_name ?? '' }}
+                                        @else
+                                            {{ $order->orderItems->first()?->custom_issue_category ?? '' }}
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 py-1 text-xs font-medium rounded-full {{ getStatusColor($order->service_step ?? 'in progress') }}">
+                                        {{ ucfirst($order->service_step ?? 'in progress') }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $order->created_at->format('d/m/Y H:i') }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -226,25 +193,54 @@
                     </div>
                 </div>
                 <div class="p-6">
-                    <div class="space-y-3">
-                        @foreach ($lowStockItems as $item)
-                            <div class="flex items-center justify-between p-3 border rounded-lg">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900">{{ $item['name'] }}</p>
-                                    <p class="text-xs text-gray-500">
-                                        {{ $item['current'] }} in stock (min: {{ $item['minimum'] }})
-                                    </p>
+                    @if ($lowStockItems->count() > 0)
+                        <div class="space-y-3">
+                            @foreach ($lowStockItems as $item)
+                                <div
+                                    class="flex items-start justify-between p-3 border rounded-lg hover:border-orange-300 transition-colors">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <p class="text-sm font-medium text-gray-900">{{ $item['name'] }}</p>
+                                            <span
+                                                class="px-2 py-1 text-xs font-medium rounded-full {{ getUrgencyColor($item['urgency']) }}">
+                                                {{ ucfirst($item['urgency']) }}
+                                            </span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 space-y-1">
+                                            <p>{{ $item['device_type'] }} - {{ $item['issue_category'] }}</p>
+                                            <p>Stock: <span
+                                                    class="font-medium {{ $item['current'] == 0 ? 'text-red-600' : 'text-gray-700' }}">{{ $item['current'] }}</span>
+                                                / Min: {{ $item['minimum'] }}
+                                                @if ($item['shortage'] > 0)
+                                                    <span class="text-red-600">(Need {{ $item['shortage'] }})</span>
+                                                @endif
+                                            </p>
+                                            @if ($item['location'])
+                                                <p>Location: {{ $item['location'] }}</p>
+                                            @endif
+                                            @if ($item['last_movement'])
+                                                <p>Last movement: {{ $item['last_movement'] }}</p>
+                                            @endif
+                                            <p>Cost: ${{ number_format($item['cost_price'], 2) }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span
-                                    class="px-2 py-1 text-xs font-medium rounded-full {{ getUrgencyColor($item['urgency']) }}">
-                                    {{ $item['urgency'] }}
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                    <a href=""
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-8">
+                            <svg class="w-12 h-12 text-green-400 mx-auto mb-3" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-sm text-gray-500">All parts are well stocked!</p>
+                        </div>
+                    @endif
+
+                    <a href="{{ route('admin.inventory.index') }}"
                         class="w-full mt-4 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition-colors block text-center">
-                        Reorder Parts
+                        Manage Inventory
                     </a>
                 </div>
             </div>

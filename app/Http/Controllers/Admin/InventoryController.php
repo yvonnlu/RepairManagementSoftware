@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Part;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -45,7 +46,7 @@ class InventoryController extends Controller
         $activeParts = $parts->filter(function ($part) {
             return $part->deleted_at === null;
         });
-        
+
         $stats = [
             'total_parts' => $activeParts->count(),
             'total_value' => $activeParts->sum(function ($part) {
@@ -105,7 +106,16 @@ class InventoryController extends Controller
         $deviceTypes = Part::distinct()->pluck('device_type')->sort()->values();
         $issueCategories = Part::distinct()->pluck('issue_category')->sort()->values();
 
-        return view('admin.pages.inventory_management.create', compact('deviceTypes', 'issueCategories'));
+        // Lấy dữ liệu từ bảng services để tạo mapping device_type -> issue_category
+        $servicesMapping = Services::select('device_type_name', 'issue_category_name')
+            ->distinct()
+            ->get()
+            ->groupBy('device_type_name')
+            ->map(function ($services) {
+                return $services->pluck('issue_category_name')->unique()->sort()->values();
+            });
+
+        return view('admin.pages.inventory_management.create', compact('deviceTypes', 'issueCategories', 'servicesMapping'));
     }
 
     public function store(Request $request)
@@ -141,7 +151,16 @@ class InventoryController extends Controller
         $deviceTypes = Part::distinct()->pluck('device_type')->sort()->values();
         $issueCategories = Part::distinct()->pluck('issue_category')->sort()->values();
 
-        return view('admin.pages.inventory_management.edit', compact('part', 'deviceTypes', 'issueCategories'));
+        // Lấy dữ liệu từ bảng services để tạo mapping device_type -> issue_category
+        $servicesMapping = Services::select('device_type_name', 'issue_category_name')
+            ->distinct()
+            ->get()
+            ->groupBy('device_type_name')
+            ->map(function ($services) {
+                return $services->pluck('issue_category_name')->unique()->sort()->values();
+            });
+
+        return view('admin.pages.inventory_management.edit', compact('part', 'deviceTypes', 'issueCategories', 'servicesMapping'));
     }
 
     public function update(Request $request, Part $part)

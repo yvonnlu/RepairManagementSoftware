@@ -33,7 +33,7 @@ return new class extends Migration
             $table->dropConstrainedForeignId('last_order_id');
             $table->dropColumn([
                 'total_in',
-                'total_out', 
+                'total_out',
                 'last_movement_date',
                 'last_movement_type',
                 'last_movement_reason',

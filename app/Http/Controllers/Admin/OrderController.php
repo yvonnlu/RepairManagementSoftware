@@ -97,7 +97,7 @@ class OrderController extends Controller
             $order = Order::findOrFail($orderId);
             $oldStep = $order->service_step;
             $newStep = $request->service_step;
-            
+
             $order->service_step = $newStep;
             $saved = $order->save();
 
@@ -109,7 +109,7 @@ class OrderController extends Controller
                 if ($newStep === 'Completed' && $oldStep !== 'Completed') {
                     // Order just completed - deduct stock
                     $stockProcessed = $inventoryService->processCompletedOrderStock($order);
-                    
+
                     if (!$stockProcessed) {
                         Log::warning('Inventory stock processing failed for completed order', [
                             'order_id' => $orderId
@@ -119,7 +119,7 @@ class OrderController extends Controller
                 } elseif ($oldStep === 'Completed' && $newStep !== 'Completed') {
                     // Order was completed but now changed to different status - restore stock
                     $stockRestored = $inventoryService->restoreOrderStock($order);
-                    
+
                     if (!$stockRestored) {
                         Log::warning('Inventory stock restoration failed for reverted order', [
                             'order_id' => $orderId
@@ -134,7 +134,7 @@ class OrderController extends Controller
                 ]);
 
                 $successMessage = 'Service step updated successfully from "' . ($oldStep ?? 'New Order') . '" to "' . $order->service_step . '"';
-                
+
                 if ($newStep === 'Completed') {
                     $successMessage .= '. Inventory stock has been updated accordingly.';
                 }

@@ -27,7 +27,7 @@ class InventoryService
                 // Get device_type and issue_category from service or custom fields
                 $deviceType = null;
                 $issueCategory = null;
-                
+
                 if ($orderItem->service_id && $orderItem->service) {
                     // Use data from Services table if standard service
                     $deviceType = $orderItem->service->device_type_name;
@@ -37,7 +37,7 @@ class InventoryService
                     $deviceType = $orderItem->custom_device_type;
                     $issueCategory = $orderItem->custom_issue_category;
                 }
-                
+
                 // Skip if we don't have both device_type and issue_category
                 if (!$deviceType || !$issueCategory) {
                     Log::warning('Missing device_type or issue_category for order item', [
@@ -49,12 +49,12 @@ class InventoryService
                     ]);
                     continue;
                 }
-                
+
                 // Find matching part based on device_type and issue_category
                 $part = Part::where('device_type', $deviceType)
-                           ->where('issue_category', $issueCategory)
-                           ->where('current_stock', '>', 0)
-                           ->first();
+                    ->where('issue_category', $issueCategory)
+                    ->where('current_stock', '>', 0)
+                    ->first();
 
                 if ($part) {
                     // Calculate quantity to deduct (default 1 per order item)
@@ -62,9 +62,9 @@ class InventoryService
 
                     // Use the new removeStock method
                     $success = $part->removeStock(
-                        $quantityToDeduct, 
-                        'repair_used', 
-                        $order->id, 
+                        $quantityToDeduct,
+                        'repair_used',
+                        $order->id,
                         "Used for Order #{$order->id} - {$orderItem->name}"
                     );
 
@@ -84,7 +84,7 @@ class InventoryService
                             'requested_quantity' => $quantityToDeduct,
                             'available_stock' => $part->current_stock
                         ]);
-                        
+
                         // Continue processing other items even if one has insufficient stock
                         continue;
                     }
@@ -101,7 +101,6 @@ class InventoryService
 
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to process completed order stock', [
@@ -126,9 +125,9 @@ class InventoryService
 
             // Find all parts that were used for this order (last_order_id = order->id)
             $parts = Part::where('last_order_id', $order->id)
-                        ->where('last_movement_type', 'out')
-                        ->where('last_movement_reason', 'repair_used')
-                        ->get();
+                ->where('last_movement_type', 'out')
+                ->where('last_movement_reason', 'repair_used')
+                ->get();
 
             foreach ($parts as $part) {
                 // Restore the stock using addStock method
@@ -150,7 +149,6 @@ class InventoryService
 
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to restore order stock', [

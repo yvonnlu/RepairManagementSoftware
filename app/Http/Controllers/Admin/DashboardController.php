@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Part;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -24,33 +26,41 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // Dữ liệu giả lập cho low stock
-        $lowStockItems = [
-            [
-                'name' => 'iPhone 14 Screen',
-                'current' => 3,
-                'minimum' => 5,
-                'urgency' => 'high',
-            ],
-            [
-                'name' => 'Samsung S23 Battery',
-                'current' => 2,
-                'minimum' => 3,
-                'urgency' => 'medium',
-            ],
-            [
-                'name' => 'MacBook Keyboard',
-                'current' => 1,
-                'minimum' => 2,
-                'urgency' => 'high',
-            ],
-            [
-                'name' => 'iPad Charging Port',
-                'current' => 4,
-                'minimum' => 5,
-                'urgency' => 'low',
-            ],
-        ];
+        // Low stock items từ database thật
+        $lowStockItems = Part::where('current_stock', '<=', DB::raw('min_stock_level'))
+            ->orderByRaw('(current_stock / GREATEST(min_stock_level, 1)) ASC') // Sắp xếp theo tỷ lệ thiếu hụt
+            ->orderBy('cost_price', 'desc') // Part đắt ưu tiên cao hơn
+            ->take(10) // Giới hạn 10 items
+            ->get()
+            ->map(function ($part) {
+                // Tính toán mức độ ưu tiên
+                if ($part->current_stock == 0) {
+                    $urgency = 'high';
+                } else {
+                    $ratio = $part->current_stock / max($part->min_stock_level, 1);
+                    if ($ratio <= 0.2) {
+                        $urgency = 'high';
+                    } elseif ($ratio <= 0.5) {
+                        $urgency = 'medium';
+                    } else {
+                        $urgency = 'low';
+                    }
+                }
+
+                return [
+                    'id' => $part->id,
+                    'name' => $part->name,
+                    'device_type' => $part->device_type,
+                    'issue_category' => $part->issue_category,
+                    'current' => $part->current_stock,
+                    'minimum' => $part->min_stock_level,
+                    'cost_price' => $part->cost_price,
+                    'location' => $part->location,
+                    'urgency' => $urgency,
+                    'shortage' => max(0, $part->min_stock_level - $part->current_stock),
+                    'last_movement' => $part->last_movement_date?->diffForHumans(),
+                ];
+            });
 
         // Stats cho dashboard
         $stats = [

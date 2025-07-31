@@ -12,8 +12,8 @@
                 <p class="text-gray-600 mt-1">Manage parts, track stock levels, and monitor inventory value</p>
             </div>
             <div class="flex items-center space-x-3">
-                
-               
+
+
                 <a href="{{ route('admin.inventory.create') }}"
                     class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,13 +38,11 @@
                         <input type="text" name="search"
                             placeholder="Search parts by name, device type, or issue category..."
                             class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-                            value="{{ request('search') }}" x-model="searchTerm" @keyup.enter="search()"
-                            @blur="search()" />
+                            value="{{ request('search') }}" x-model="searchTerm" @keyup.enter="search()" @blur="search()" />
                     </form>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <form method="GET" action="{{ route('admin.inventory.index') }}"
-                        class="flex items-center space-x-2">
+                    <form method="GET" action="{{ route('admin.inventory.index') }}" class="flex items-center space-x-2">
                         <input type="hidden" name="search" value="{{ request('search') }}">
                         <select name="category" onchange="this.form.submit()"
                             class="px-4 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -103,7 +101,8 @@
                                         <div class="text-xs text-gray-400">
                                             {{ $part->issue_category }}
                                             @if ($part->deleted_at)
-                                                <br><span class="text-red-600 font-medium">Deleted: {{ $part->deleted_at->format('d/m/Y H:i') }}</span>
+                                                <br><span class="text-red-600 font-medium">Deleted:
+                                                    {{ $part->deleted_at->format('d/m/Y H:i') }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -114,11 +113,13 @@
                                             {{ $part->device_type }}
                                         </span>
                                         @if ($part->deleted_at)
-                                            <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                                            <span
+                                                class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
                                                 Deleted
                                             </span>
                                         @else
-                                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                            <span
+                                                class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                                                 Active
                                             </span>
                                         @endif
@@ -147,7 +148,7 @@
                                     <div class="text-sm font-medium text-gray-900">
                                         ${{ number_format($part->cost_price * 2.5) }}
                                     </div>
-                                    
+
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">Auto-managed</div>
@@ -169,8 +170,7 @@
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('admin.inventory.detail', $part) }}"
                                             class="text-blue-600 hover:text-blue-800" title="View Details">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -189,18 +189,19 @@
                                                 </svg>
                                             </button>
                                         @endif
-                                        
+
                                         @if ($part->deleted_at)
                                             <!-- Restore button for deleted parts -->
-                                            <form method="POST" action="{{ route('admin.inventory.restore', $part->id) }}"
-                                                class="inline"
+                                            <form method="POST"
+                                                action="{{ route('admin.inventory.restore', $part->id) }}" class="inline"
                                                 onsubmit="return confirm('Are you sure you want to restore {{ $part->name }}?')">
                                                 @csrf
                                                 <button type="submit" class="text-green-600 hover:text-green-800"
                                                     title="Restore">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
                                                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                                         </path>
                                                     </svg>
@@ -316,7 +317,8 @@
                                 <button x-show="selectedPart.stock_quantity <= selectedPart.min_stock_level"
                                     @click="reorderPart(selectedPart.id)"
                                     class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
-                                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                         </path>
