@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Part;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -107,5 +108,93 @@ class DashboardController extends Controller
         ];
 
         return view('admin.pages.dashboard', compact('stats', 'recentOrders', 'lowStockItems', 'completedOrders', 'totalCustomers'));
+    }
+
+    public function getRevenueData(Request $request)
+    {
+        $type = $request->get('type', 'weekly');
+
+        if ($type === 'weekly') {
+            return $this->getWeeklyRevenue();
+        } else {
+            return $this->getMonthlyRevenue();
+        }
+    }
+
+    private function getWeeklyRevenue()
+    {
+        // Get revenue for last 4 weeks
+        $revenueData = Order::select(
+            DB::raw('WEEK(created_at, 1) as week_number'),
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('SUM(total) as revenue')
+        )
+            ->where('created_at', '>=', now()->subWeeks(4))
+            ->where('service_step', 'completed') // Only completed orders
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('WEEK(created_at, 1)'))
+            ->orderBy(DB::raw('YEAR(created_at)'), 'asc')
+            ->orderBy(DB::raw('WEEK(created_at, 1)'), 'asc')
+            ->get();
+
+        // Fill in missing weeks with 0 revenue
+        $completeData = [];
+
+        for ($i = 3; $i >= 0; $i--) {
+            $weekLabel = "Week " . (4 - $i);
+            $weekStart = now()->subWeeks($i)->startOfWeek();
+            $weekNumber = $weekStart->week;
+            $year = $weekStart->year;
+
+            // Find existing data for this week
+            $existingData = $revenueData->first(function ($item) use ($weekNumber, $year) {
+                return $item->week_number == $weekNumber && $item->year == $year;
+            });
+
+            $completeData[] = [
+                'period' => $weekLabel,
+                'revenue' => $existingData ? (float) $existingData->revenue : 0
+            ];
+        }
+
+        return response()->json($completeData);
+    }
+
+    private function getMonthlyRevenue()
+    {
+        // Get revenue for last 12 months
+        $revenueData = Order::select(
+            DB::raw('MONTH(created_at) as month_number'),
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('SUM(total) as revenue')
+        )
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->where('service_step', 'completed') // Only completed orders
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'), 'asc')
+            ->orderBy(DB::raw('MONTH(created_at)'), 'asc')
+            ->get();
+
+        // Fill in missing months with 0 revenue
+        $completeData = [];
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $monthStart = now()->subMonths($i)->startOfMonth();
+            $monthNumber = $monthStart->month;
+            $year = $monthStart->year;
+            $monthLabel = $monthNames[$monthNumber - 1];
+
+            // Find existing data for this month
+            $existingData = $revenueData->first(function ($item) use ($monthNumber, $year) {
+                return $item->month_number == $monthNumber && $item->year == $year;
+            });
+
+            $completeData[] = [
+                'period' => $monthLabel,
+                'revenue' => $existingData ? (float) $existingData->revenue : 0
+            ];
+        }
+
+        return response()->json($completeData);
     }
 }

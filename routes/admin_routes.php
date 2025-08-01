@@ -13,6 +13,10 @@ Route::get('admin/dashboard', [DashboardController::class, 'index'])
     ->name('admin.dashboard')
     ->middleware(CheckIsAdmin::class);
 
+Route::get('admin/dashboard/revenue-data', [DashboardController::class, 'getRevenueData'])
+    ->name('admin.dashboard.revenue-data')
+    ->middleware(CheckIsAdmin::class);
+
 
 Route::prefix('admin/customer')
     ->controller(CustomerController::class)

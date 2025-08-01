@@ -39,10 +39,10 @@ class GoogleController extends Controller
 
         Auth::login($user);
 
-        if ($user->role === 1) {
+        if ($user->role == 1) {
             return redirect()->route('admin.dashboard');
         } else {
-            return redirect()->route('client.profile');
+            return redirect()->route('home.index');
         }
     }
 }

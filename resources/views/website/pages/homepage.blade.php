@@ -845,7 +845,7 @@
                             </div>
 
                             <!-- Quick Actions -->
-                            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                            {{-- <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                                 <h4 class="text-xl font-bold mb-4 flex items-center">
                                     <i data-lucide="calendar" class="w-5 h-5 mr-2 text-green-400"></i>
                                     Quick Booking
@@ -864,7 +864,7 @@
                                 <p class="text-sm text-blue-200 mt-3 text-center">
                                     Response within 15 minutes • Free consultation
                                 </p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <!-- Contact Form -->

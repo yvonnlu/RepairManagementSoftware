@@ -166,7 +166,7 @@
                                             class="text-blue-600 hover:text-blue-900 transition-colors">
                                             <i data-lucide="eye" class="w-4 h-4"></i>
                                         </a>
-                                        <a href="{{ route('admin.quote-requests.edit', $request) }}"
+                                        <a href="{{ route('admin.quote-requests.show', $request) }}"
                                             class="text-yellow-600 hover:text-yellow-900 transition-colors">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </a>
