@@ -1,2 +1,46 @@
 User-agent: *
-Disallow:
+
+# Allow crawling of main pages
+Allow: /
+Allow: /services
+Allow: /services/*
+Allow: /about
+Allow: /contact
+
+# Block admin and private areas
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /client/
+Disallow: /client/*
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /email/
+Disallow: /api/
+
+# Block temporary and system files
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /.env
+Disallow: /artisan
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+
+# Block search and filtering URLs with parameters
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?page=*
+
+# Allow important static resources
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /favicon.ico
+Allow: /favicon.svg
+
+# Sitemap location
+Sitemap: /sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1

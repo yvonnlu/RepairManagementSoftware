@@ -13,8 +13,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Tổng doanh thu
-        $totalRevenue = Order::sum('total');
+        // Tổng doanh thu chỉ từ đơn hàng completed
+        $totalRevenue = Order::where('service_step', 'completed')->sum('total');
         // Tổng số đơn hàng
         $orderCount = Order::count();
         // Số đơn hàng đã hoàn thành
@@ -73,7 +73,7 @@ class DashboardController extends Controller
                 'icon' => 'dollar-sign',
                 'color' => 'text-green-600',
                 'bg' => 'bg-green-50',
-                'description' => 'all time total',
+                'description' => 'from completed orders',
             ],
             [
                 'title' => 'Orders',
@@ -127,13 +127,14 @@ class DashboardController extends Controller
         $revenueData = Order::select(
             DB::raw('WEEK(created_at, 1) as week_number'),
             DB::raw('YEAR(created_at) as year'),
-            DB::raw('SUM(total) as revenue')
+            DB::raw('SUM(total) as revenue'),
+            DB::raw('DATE(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY)) as week_start')
         )
             ->where('created_at', '>=', now()->subWeeks(4))
             ->where('service_step', 'completed') // Only completed orders
-            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('WEEK(created_at, 1)'))
-            ->orderBy(DB::raw('YEAR(created_at)'), 'asc')
-            ->orderBy(DB::raw('WEEK(created_at, 1)'), 'asc')
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('WEEK(created_at, 1)'), DB::raw('DATE(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY))'))
+            ->orderBy('year', 'asc')
+            ->orderBy('week_number', 'asc')
             ->get();
 
         // Fill in missing weeks with 0 revenue
@@ -142,12 +143,11 @@ class DashboardController extends Controller
         for ($i = 3; $i >= 0; $i--) {
             $weekLabel = "Week " . (4 - $i);
             $weekStart = now()->subWeeks($i)->startOfWeek();
-            $weekNumber = $weekStart->week;
-            $year = $weekStart->year;
 
             // Find existing data for this week
-            $existingData = $revenueData->first(function ($item) use ($weekNumber, $year) {
-                return $item->week_number == $weekNumber && $item->year == $year;
+            $existingData = $revenueData->first(function ($item) use ($weekStart) {
+                $itemWeekStart = Carbon::parse($item->week_start);
+                return $itemWeekStart->isSameWeek($weekStart);
             });
 
             $completeData[] = [
@@ -163,30 +163,41 @@ class DashboardController extends Controller
     {
         // Get revenue for last 12 months
         $revenueData = Order::select(
-            DB::raw('MONTH(created_at) as month_number'),
+            DB::raw('MONTH(created_at) as month_num'),
             DB::raw('YEAR(created_at) as year'),
             DB::raw('SUM(total) as revenue')
         )
             ->where('created_at', '>=', now()->subMonths(12))
             ->where('service_step', 'completed') // Only completed orders
             ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at)'), 'asc')
-            ->orderBy(DB::raw('MONTH(created_at)'), 'asc')
+            ->orderBy('year', 'asc')
+            ->orderBy('month_num', 'asc')
             ->get();
 
         // Fill in missing months with 0 revenue
         $completeData = [];
-        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $monthNames = [
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'May',
+            6 => 'Jun',
+            7 => 'Jul',
+            8 => 'Aug',
+            9 => 'Sep',
+            10 => 'Oct',
+            11 => 'Nov',
+            12 => 'Dec'
+        ];
 
         for ($i = 11; $i >= 0; $i--) {
-            $monthStart = now()->subMonths($i)->startOfMonth();
-            $monthNumber = $monthStart->month;
-            $year = $monthStart->year;
-            $monthLabel = $monthNames[$monthNumber - 1];
+            $targetDate = now()->subMonths($i);
+            $monthLabel = $monthNames[$targetDate->month];
 
             // Find existing data for this month
-            $existingData = $revenueData->first(function ($item) use ($monthNumber, $year) {
-                return $item->month_number == $monthNumber && $item->year == $year;
+            $existingData = $revenueData->first(function ($item) use ($targetDate) {
+                return $item->year == $targetDate->year && $item->month_num == $targetDate->month;
             });
 
             $completeData[] = [

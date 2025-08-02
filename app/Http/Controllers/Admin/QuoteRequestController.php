@@ -14,7 +14,7 @@ class QuoteRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $query = QuoteRequest::query();
+        $query = QuoteRequest::withTrashed();
 
         // Filter by status
         if ($request->has('status') && $request->status !== '') {
@@ -97,7 +97,7 @@ class QuoteRequestController extends Controller
 
         $quoteRequest->update($validated);
 
-        return redirect()->route('admin.quote-requests.show', $quoteRequest)
+        return redirect()->route('admin.quote-requests.detail', $quoteRequest)
             ->with('success', 'Quote request updated successfully.');
     }
 
@@ -110,5 +110,17 @@ class QuoteRequestController extends Controller
 
         return redirect()->route('admin.quote-requests.index')
             ->with('success', 'Quote request deleted successfully.');
+    }
+
+    /**
+     * Restore the specified resource from soft delete.
+     */
+    public function restore($id)
+    {
+        $quoteRequest = QuoteRequest::withTrashed()->findOrFail($id);
+        $quoteRequest->restore();
+
+        return redirect()->route('admin.quote-requests.index')
+            ->with('success', 'Quote request restored successfully.');
     }
 }

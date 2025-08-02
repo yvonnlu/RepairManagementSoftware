@@ -73,15 +73,6 @@ class InventoryController extends Controller
         ));
     }
 
-    public function show(Part $part)
-    {
-        if (request()->wantsJson()) {
-            return response()->json($part);
-        }
-
-        return view('admin.pages.inventory_management.detail', compact('part'));
-    }
-
     public function detail(Part $part)
     {
         if (request()->wantsJson()) {

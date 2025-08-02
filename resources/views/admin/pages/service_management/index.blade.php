@@ -117,6 +117,30 @@
                                     <span class="text-sm font-medium">2-3 days</span>
                                 </div>
                             </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">Image:</span>
+                                <div class="flex items-center space-x-1">
+                                    @if ($service->hasImage())
+                                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"
+                                                ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21,15 16,10 5,21"></polyline>
+                                        </svg>
+                                        <span class="text-sm font-medium text-green-600">Available</span>
+                                    @else
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"
+                                                ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21,15 16,10 5,21"></polyline>
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-400">Not uploaded</span>
+                                    @endif
+                                </div>
+                            </div>
                             @if ($service->deleted_at)
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-gray-500">Deleted:</span>
@@ -144,11 +168,11 @@
                                 @if ($service->deleted_at)
                                     <!-- Restore button for deleted services -->
                                     <form method="POST" action="{{ route('admin.service.restore', $service->id) }}"
-                                        class="inline"
-                                        onsubmit="return confirm('Are you sure you want to restore {{ $service->issue_category_name }}?')">
+                                        class="inline" id="restore-service-form-{{ $service->id }}">
                                         @csrf
-                                        <button type="submit" class="text-green-600 hover:text-green-800"
-                                            title="Restore">
+                                        <button type="button"
+                                            onclick="confirmRestore('{{ $service->issue_category_name }}', function() { document.getElementById('restore-service-form-{{ $service->id }}').submit(); })"
+                                            class="text-green-600 hover:text-green-800" title="Restore">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,11 +184,12 @@
                                 @else
                                     <!-- Delete button for active services -->
                                     <form method="POST" action="{{ route('admin.service.destroy', $service) }}"
-                                        class="inline"
-                                        onsubmit="return confirm('Are you sure you want to delete {{ $service->issue_category_name }}?')">
+                                        class="inline" id="delete-service-form-{{ $service->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800" title="Delete">
+                                        <button type="button"
+                                            onclick="confirmDelete('{{ $service->issue_category_name }}', function() { document.getElementById('delete-service-form-{{ $service->id }}').submit(); })"
+                                            class="text-red-600 hover:text-red-800" title="Delete">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

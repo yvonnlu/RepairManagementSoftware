@@ -1,16 +1,18 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 require_once(__DIR__ . '/admin_routes.php');
 require_once(__DIR__ . '/client_routes.php');
 
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
 Route::get('/dashboard', function () {

@@ -394,17 +394,10 @@
         }
 
         function initializeOrderForm() {
-            console.log('Initializing order form...');
-
             const serviceCheckboxes = document.querySelectorAll('input[name="services[]"]');
             const totalDisplay = document.getElementById('total-display');
             const totalInput = document.getElementById('total-input');
             const manualTotalInput = document.getElementById('manual-total-input');
-
-            console.log('Found elements:');
-            console.log('- Service checkboxes:', serviceCheckboxes.length);
-            console.log('- Total display:', totalDisplay ? 'Found' : 'Not found');
-            console.log('- Total input:', totalInput ? 'Found' : 'Not found');
 
             function calculateTotal() {
                 // Only calculate for standard services
@@ -412,36 +405,28 @@
                 if (!isStandardMode) return;
 
                 let total = 0;
-                console.log('Calculating total...');
 
                 serviceCheckboxes.forEach(function(checkbox, index) {
                     const price = parseFloat(checkbox.getAttribute('data-price')) || 0;
-                    console.log(`Service ${index + 1}: price=${price}, checked=${checkbox.checked}`);
 
                     if (checkbox.checked) {
                         total += price;
                     }
                 });
 
-                console.log('Final total:', total);
-
                 if (totalDisplay) {
                     totalDisplay.textContent = '$' + total.toFixed(2);
-                    console.log('Updated display to:', '$' + total.toFixed(2));
                 }
                 if (totalInput) {
                     totalInput.value = total.toFixed(2);
-                    console.log('Updated input to:', total.toFixed(2));
                 }
             }
 
             // Add event listeners to checkboxes
             serviceCheckboxes.forEach(function(checkbox, index) {
                 const price = checkbox.getAttribute('data-price');
-                console.log(`Setting up checkbox ${index + 1} with price: ${price}`);
 
                 checkbox.addEventListener('change', function() {
-                    console.log(`Checkbox ${index + 1} changed to: ${this.checked}`);
                     calculateTotal();
                 });
             });
@@ -452,14 +437,12 @@
             }
 
             // Calculate initial total
-            console.log('Calculating initial total...');
             calculateTotal();
 
             // Form validation
             const form = document.querySelector('form');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    console.log('Form submitted, validating...');
 
                     const isStandardMode = document.querySelector('input[name="service_type"][value="standard"]')
                         .checked;
@@ -497,8 +480,6 @@
                         alert('Please select a customer for this order!');
                         return;
                     }
-
-                    console.log('Form validation passed');
                 });
             }
         }

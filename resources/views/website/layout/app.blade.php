@@ -5,10 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>TechFix Pro - Professional Electronics Repair</title>
+
+    {{-- SEO Meta Tags --}}
+    <title>{{ $seo['title'] ?? 'Fixicon - Professional Electronics Repair' }}</title>
+    <meta name="description"
+        content="{{ $seo['description'] ?? 'Expert electronics repair services for smartphones, tablets, laptops & more. Fast, reliable repairs with warranty.' }}">
+    <meta name="keywords"
+        content="{{ $seo['keywords'] ?? 'electronics repair, phone repair, laptop repair, professional repair services' }}">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Fixicon">
+
+    {{-- Canonical URL --}}
+    <link rel="canonical" href="{{ $seo['canonical'] ?? url()->current() }}">
+
+    {{-- Open Graph Meta Tags --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Fixicon">
+    <meta property="og:title"
+        content="{{ $seo['og_title'] ?? ($seo['title'] ?? 'Fixicon - Professional Electronics Repair') }}">
+    <meta property="og:description"
+        content="{{ $seo['og_description'] ?? ($seo['description'] ?? 'Expert electronics repair services for smartphones, tablets, laptops & more.') }}">
+    <meta property="og:image" content="{{ $seo['og_image'] ?? asset('images/og-image.jpg') }}">
+    <meta property="og:url" content="{{ $seo['og_url'] ?? url()->current() }}">
+    <meta property="og:locale" content="en_US">
+
+    {{-- Twitter Card Meta Tags --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@TechFixPro">
+    <meta name="twitter:title"
+        content="{{ $seo['twitter_title'] ?? ($seo['title'] ?? 'Fixicon - Professional Electronics Repair') }}">
+    <meta name="twitter:description"
+        content="{{ $seo['twitter_description'] ?? ($seo['description'] ?? 'Expert electronics repair services with warranty.') }}">
+    <meta name="twitter:image" content="{{ $seo['twitter_image'] ?? asset('images/og-image.jpg') }}">
+
+    {{-- Structured Data --}}
+    @if (isset($seo['structured_data']) && $seo['structured_data'])
+        <script type="application/ld+json">
+        {!! $seo['structured_data'] !!}
+    </script>
+    @endif
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+
+    {{-- Preconnect for performance --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
 
@@ -128,39 +174,30 @@
                         </div>
                     </div>
                     ${service.warranty ? `
-                        <div class="bg-purple-50 p-4 rounded-xl">
-                            <div class="flex items-center space-x-2 mb-2">
-                                <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i>
-                                <span class="text-purple-600 font-medium">Warranty</span>
-                            </div>
-                            <p class="text-purple-700 font-semibold">${service.warranty}</p>
-                        </div>
-                        ` : ''}
+                                <div class="bg-purple-50 p-4 rounded-xl">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i>
+                                        <span class="text-purple-600 font-medium">Warranty</span>
+                                    </div>
+                                    <p class="text-purple-700 font-semibold">${service.warranty}</p>
+                                </div>
+                                ` : ''}
                     ${includes ? `
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Service Includes:</h3>
-                            <div class="space-y-2">${includes}</div>
-                        </div>
-                        ` : ''}
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Service Includes:</h3>
+                                    <div class="space-y-2">${includes}</div>
+                                </div>
+                                ` : ''}
                 </div>
                 <div class="p-6 bg-gray-50 rounded-b-2xl">
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <button onclick="bookService('${service.name}')" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2">
-                            <span>Book Now</span>
-                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="scrollToSection('contact'); closeServiceModal();" class="flex-1 bg-white border-2 border-blue-600 text-blue-600 py-3 px-6 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center space-x-2">
+                        <button onclick="scrollToSection('contact'); closeServiceModal();" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
                             <i data-lucide="phone" class="w-5 h-5"></i>
                             <span>Call for Consultation</span>
                         </button>
                     </div>
                 </div>
             `;
-        }
-
-        function bookService(serviceName) {
-            alert(`Book service: ${serviceName}`);
-            closeServiceModal();
         }
 
         // Filter services

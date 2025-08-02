@@ -6,28 +6,17 @@ use App\Http\Controllers\client\GoogleController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ServiceController;
-use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\QuoteRequestController;
-
 use App\Http\Middleware\CheckIsClient;
-use App\Mail\TestEmailTemplate;
-use App\Models\Services;
-use Illuminate\Support\Facades\Mail;
-
-
 use Illuminate\Support\Facades\Route;
 
 // Quote Request Route (Public - không cần authentication)
 Route::post('/quote-request', [QuoteRequestController::class, 'store'])->name('client.quote-request.store');
 
-Route::get('client/profile', [CartController::class, 'show'])->name('client.profile')->middleware(CheckIsClient::class);
-
 Route::get('google/callback', [GoogleController::class, 'callback'])->name('client.google.callback');
 
 Route::get('client/profile', [ProfileController::class, 'show'])->name('client.profile')->middleware(CheckIsClient::class);
 Route::post('client/profile/update', [ProfileController::class, 'update'])->name('client.profile.update')->middleware(CheckIsClient::class);
-
-Route::get('client/profile', [CartController::class, 'profileShow'])->name('client.profile')->middleware(CheckIsClient::class);
 Route::get('client/orders', [CartController::class, 'orderShow'])->name('client.orders')->middleware(CheckIsClient::class);
 
 
@@ -48,10 +37,6 @@ Route::get('services', [ServiceController::class, 'index'])->name('service.index
 Route::get('checkout', [CartController::class, 'checkout'])->name('payment.index')->middleware('auth');
 Route::post('place-order', [CartController::class, 'placeOrder'])->name('cart.place-order')->middleware('auth');
 
-Route::get('test-mail', function () {
-    $service = Services::find(1);
-    Mail::to('lunguyetnghia@gmail.com')->send(new TestEmailTemplate($service));
-});
 Route::get('vnpay_return', [CartController::class, 'vnpayReturn']);
 
 Route::get('cart/add-service-to-cart/{service}', [CartController::class, 'addServiceToCart'])->name('cart.add-service-to-cart')->middleware('auth');

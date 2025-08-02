@@ -15,9 +15,9 @@ class QuoteRequestController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'nullable|numeric|digits_between:10,15',
+            'phone' => 'required|numeric|digits_between:10,15',
             'device_type' => 'required|string|max:100',
-            'issue' => 'nullable|string|max:1000',
+            'issue' => 'required|string|max:1000',
         ]);
 
         if ($validator->fails()) {

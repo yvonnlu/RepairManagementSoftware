@@ -30,12 +30,6 @@
             'icon' => 'file-text',
             'route' => 'admin.quote-requests.index',
         ],
-        // [
-        //     'id' => 'technicians',
-        //     'label' => 'Technicians',
-        //     'icon' => 'user-check',
-        //     'route' => '#',
-        // ],
         [
             'id' => 'inventory',
             'label' => 'Inventory',

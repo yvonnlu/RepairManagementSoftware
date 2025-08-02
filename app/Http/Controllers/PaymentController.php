@@ -9,7 +9,7 @@ class PaymentController extends Controller
     public function checkout()
     {
         // You can pass data to the view as needed
-        return view('website.pages.checkout');
+        return view('website.pages.orders.checkout');
     }
 
     public function submit(Request $request)

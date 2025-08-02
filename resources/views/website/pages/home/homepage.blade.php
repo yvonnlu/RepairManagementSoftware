@@ -204,7 +204,7 @@
 
                     <!-- Service Highlights -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                        <!-- Mobile Device Repair -->
+                        <!-- Smartphone Repair -->
                         <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
                             <div class="flex items-start space-x-6">
                                 <div
@@ -215,7 +215,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h3
                                             class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                            Mobile Device Repair
+                                            Smartphone Repair
                                         </h3>
                                         <div class="text-right">
                                             <div class="text-sm font-medium text-gray-500">25,000+ repaired</div>
@@ -223,9 +223,23 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Expert repair for smartphones and tablets with genuine parts, fast turnaround times,
-                                        and comprehensive warranty coverage for all repairs.
+                                        Expert smartphone repair services for all major brands. We use genuine parts and provide comprehensive warranty coverage.
                                     </p>
+                                    <!-- Supported Brands -->
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Apple</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Samsung</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Xiaomi</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
@@ -252,55 +266,69 @@
                             </div>
                         </div>
 
-                        <!-- Computer & Laptop Repair -->
+                        <!-- Tablet Repair -->
                         <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
                             <div class="flex items-start space-x-6">
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <i data-lucide="laptop" class="w-8 h-8 text-white"></i>
+                                    <i data-lucide="tablet" class="w-8 h-8 text-white"></i>
                                 </div>
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between mb-3">
                                         <h3
                                             class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                            Computer & Laptop Repair
+                                            Tablet Repair
                                         </h3>
                                         <div class="text-right">
-                                            <div class="text-sm font-medium text-gray-500">15,000+ repaired</div>
+                                            <div class="text-sm font-medium text-gray-500">12,000+ repaired</div>
                                             <div class="text-sm font-bold text-green-600">4.8/5</div>
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Professional computer repair services for all brands and operating systems, from
-                                        basic troubleshooting to complex motherboard repairs.
+                                        Professional tablet repair services for major tablet brands. Specialized in touchscreen and display issues.
                                     </p>
+                                    <!-- Supported Brands -->
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">iPad</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Samsung</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Huawei</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Hardware diagnostics</span>
+                                            <span>Screen digitizer repair</span>
                                         </div>
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Software troubleshooting</span>
+                                            <span>Battery service</span>
                                         </div>
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Performance optimization</span>
+                                            <span>Charging port repair</span>
                                         </div>
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Data recovery</span>
+                                            <span>Home button fixes</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Gaming & Desktop Systems -->
+                        <!-- Desktop PC & Laptop Repair -->
                         <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
                             <div class="flex items-start space-x-6">
                                 <div
@@ -311,22 +339,36 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h3
                                             class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                            Gaming & Desktop Systems
+                                            Desktop PC & Laptop Repair
                                         </h3>
                                         <div class="text-right">
-                                            <div class="text-sm font-medium text-gray-500">8,000+ repaired</div>
-                                            <div class="text-sm font-bold text-green-600">4.9/5</div>
+                                            <div class="text-sm font-medium text-gray-500">18,000+ repaired</div>
+                                            <div class="text-sm font-bold text-green-600">4.8/5</div>
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Specialized repair and upgrade services for gaming PCs and workstations, ensuring
-                                        optimal performance for demanding applications.
+                                        Comprehensive repair services for desktop computers and laptops. From hardware diagnostics to performance optimization.
                                     </p>
+                                    <!-- Supported Brands -->
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Apple</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Dell</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">HP</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Graphics card repair</span>
+                                            <span>Hardware diagnostics</span>
                                         </div>
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
@@ -336,19 +378,19 @@
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Custom builds</span>
+                                            <span>Keyboard replacement</span>
                                         </div>
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Cooling solutions</span>
+                                            <span>Performance optimization</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Wearable Technology -->
+                        <!-- Smartwatch Repair -->
                         <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
                             <div class="flex items-start space-x-6">
                                 <div
@@ -359,17 +401,31 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h3
                                             class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                            Wearable Technology
+                                            Smartwatch Repair
                                         </h3>
                                         <div class="text-right">
-                                            <div class="text-sm font-medium text-gray-500">3,000+ repaired</div>
+                                            <div class="text-sm font-medium text-gray-500">5,000+ repaired</div>
                                             <div class="text-sm font-bold text-green-600">4.7/5</div>
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Expert repair services for smartwatches and other wearable devices, restoring
-                                        functionality and water resistance.
+                                        Expert repair services for smartwatch devices and wearable technology. Specialized in screen and functionality restoration.
                                     </p>
+                                    <!-- Supported Brands -->
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Apple Watch</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Samsung</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                                <span class="font-medium">Garmin</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
@@ -389,7 +445,7 @@
                                         <div class="flex items-center space-x-2 text-sm text-gray-700">
                                             <i data-lucide="check-circle"
                                                 class="w-4 h-4 text-green-500 flex-shrink-0"></i>
-                                            <span>Button repairs</span>
+                                            <span>Button & crown repair</span>
                                         </div>
                                     </div>
                                 </div>
@@ -400,7 +456,7 @@
                     <!-- CTA Section -->
                     <div class="text-center">
                         <a href="{{ route('service.index') }}"
-                            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 mx-auto">
+                            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-2 mx-auto">
                             <span>View All Services</span>
                             <i data-lucide="arrow-right" class="w-5 h-5"></i>
                         </a>
@@ -415,7 +471,7 @@
             <section id="features" class="py-10 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
                 <div class="container mx-auto px-6">
                     <div class="text-center mb-16">
-                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose TechFix Pro?</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose Fixicon?</h2>
                         <p class="text-xl text-gray-600 max-w-3xl mx-auto">We combine expert craftsmanship with
                             cutting-edge technology to deliver the best repair experience</p>
                     </div>
@@ -734,7 +790,7 @@
                             </div>
                             <p class="text-gray-700 mb-6 italic leading-relaxed">
                                 "Phone dropped in water was successfully rescued. Important data was completely preserved.
-                                Thank you TechFix Pro team so much!"
+                                Thank you Fixicon team so much!"
                             </p>
                             <div class="flex items-center space-x-4">
                                 <div
@@ -923,8 +979,9 @@
 
                                 <div>
                                     <label for="phone" class="block text-sm font-medium text-blue-100 mb-2">Phone
-                                        Number</label>
-                                    <input type="number" id="phone" name="phone" value="{{ old('phone') }}"
+                                        Number *</label>
+                                    <input type="number" id="phone" name="phone" required
+                                        value="{{ old('phone') }}"
                                         class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('phone') border-red-500 @enderror"
                                         placeholder="1234567890">
                                     @error('phone')
@@ -952,8 +1009,8 @@
 
                                 <div>
                                     <label for="issue" class="block text-sm font-medium text-blue-100 mb-2">Issue
-                                        Description</label>
-                                    <textarea id="issue" name="issue" rows="4"
+                                        Description *</label>
+                                    <textarea id="issue" name="issue" rows="4" required
                                         class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-blue-200 backdrop-blur-sm @error('issue') border-red-500 @enderror"
                                         placeholder="Describe the device issue in detail...">{{ old('issue') }}</textarea>
                                     @error('issue')

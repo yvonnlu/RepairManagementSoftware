@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Services;
+use App\Services\SEOService;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,10 +27,14 @@ class HomeController extends Controller
 
         $services = $query->get();
 
-        return view('website.pages.homepage', [
+        // Generate SEO data
+        $seo = SEOService::generateMetaTags('home');
+
+        return view('website.pages.home.homepage', [
             'services'     => $services,
             'deviceTypes'  => $deviceTypes,
             'selectedType' => $selectedType,
+            'seo'          => $seo,
         ]);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\Admin\QuoteRequestController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Admin\ServiceImageController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -65,10 +66,6 @@ Route::prefix('admin/service')
 
 
 
-Route::get('admin/orderlist', function () {
-    return view('admin.pages.order_management.list');
-})->name('admin.orderlist')->middleware(CheckIsAdmin::class);
-
 // Inventory Management Routes
 Route::prefix('admin/inventory')
     ->controller(InventoryController::class)
@@ -94,16 +91,20 @@ Route::prefix('admin/quote-requests')
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{quoteRequest}', 'show')->name('show');
+        Route::get('/detail/{quoteRequest}', 'show')->name('detail');
         Route::put('/{quoteRequest}', 'update')->name('update');
         Route::delete('/{quoteRequest}', 'destroy')->name('destroy');
+        Route::post('/restore/{id}', 'restore')->name('restore');
     });
 
-Route::get('admin/technicianlist', function () {
-    return view('admin.pages.technician_management.list');
-})->name('admin.technicianlist')->middleware(CheckIsAdmin::class);
-
-
-Route::get('admin/inventorylist', function () {
-    return view('admin.pages.inventory_management.list');
-})->name('admin.inventorylist')->middleware(CheckIsAdmin::class);
+// Service Image Management Routes
+Route::prefix('admin/service-images')
+    ->controller(ServiceImageController::class)
+    ->name('admin.service-images.')
+    ->middleware(CheckIsAdmin::class)
+    ->group(function () {
+        Route::post('/{service}/upload', 'upload')->name('upload');
+        Route::delete('/{service}/delete', 'delete')->name('delete');
+        Route::get('/{service}', 'show')->name('show');
+        Route::post('/{service}/restore', 'restore')->name('restore');
+    });

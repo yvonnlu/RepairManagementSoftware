@@ -254,27 +254,42 @@
                     <div class="grid grid-cols-2 gap-3">
                         <a href="{{ route('admin.order.create') }}"
                             class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors group block text-center">
-                            <i data-lucide="shopping-cart"
-                                class="w-6 h-6 text-gray-400 group-hover:text-blue-500 mx-auto mb-2"></i>
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-500 mx-auto mb-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01">
+                                </path>
+                            </svg>
                             <p class="text-sm font-medium text-gray-600 group-hover:text-blue-600">New Order</p>
                         </a>
                         <a href="{{ route('admin.customer.create') }}"
                             class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors group block text-center">
-                            <i data-lucide="user-plus"
-                                class="w-6 h-6 text-gray-400 group-hover:text-green-500 mx-auto mb-2"></i>
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-green-500 mx-auto mb-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
+                                </path>
+                            </svg>
                             <p class="text-sm font-medium text-gray-600 group-hover:text-green-600">Add Customer</p>
                         </a>
-                        <a href="{{ route('admin.service.create') }}"
+                        <a href=""
                             class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors group block text-center">
-                            <i data-lucide="wrench"
-                                class="w-6 h-6 text-gray-400 group-hover:text-purple-500 mx-auto mb-2"></i>
-                            <p class="text-sm font-medium text-gray-600 group-hover:text-purple-600">Add Service</p>
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-purple-500 mx-auto mb-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            <p class="text-sm font-medium text-gray-600 group-hover:text-purple-600">Schedule</p>
                         </a>
-                        <a href="{{ route('admin.inventory.create') }}"
+                        <a href=""
                             class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors group block text-center">
-                            <i data-lucide="package"
-                                class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mx-auto mb-2"></i>
-                            <p class="text-sm font-medium text-gray-600 group-hover:text-orange-600">Add Part</p>
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mx-auto mb-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <p class="text-sm font-medium text-gray-600 group-hover:text-orange-600">Inventory</p>
                         </a>
                     </div>
                 </div>
@@ -303,7 +318,7 @@
                 </div>
             </div>
             <div class="p-6">
-                <div id="revenue_chart" class="relative" style="width: 100%; height: 400px;"></div>
+                <div id="revenue_chart" style="width: 100%; height: 400px;"></div>
                 <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                     <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
                         <p class="text-2xl font-bold text-blue-600" id="total-revenue">$0</p>
@@ -372,27 +387,44 @@
             avgLabel.textContent = viewType === 'weekly' ? 'Weekly Average' : 'Monthly Average';
 
             // Fetch data from database
-            console.log(`Fetching revenue data for: ${viewType}`);
             fetch(`/admin/dashboard/revenue-data?type=${viewType}`)
                 .then(response => {
-                    console.log('Response status:', response.status);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Received data:', data);
                     drawRevenueChart(data);
                 })
                 .catch(error => {
                     console.error('Error fetching revenue data:', error);
-                    // Show empty chart with message if API fails
-                    drawEmptyChart(viewType);
+                    // Show empty chart with message instead of dummy data
+                    drawRevenueChart([]);
                 });
         }
 
         function drawRevenueChart(revenueData) {
+            // Check if no data available
+            if (!revenueData || revenueData.length === 0) {
+                document.getElementById('revenue_chart').innerHTML =
+                    '<div class="flex items-center justify-center h-96 text-gray-500">' +
+                    '<div class="text-center">' +
+                    '<svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>' +
+                    '</svg>' +
+                    '<p class="text-lg font-medium">No revenue data available</p>' +
+                    '<p class="text-sm">Complete some orders to see revenue charts</p>' +
+                    '</div>' +
+                    '</div>';
+
+                // Reset summary stats
+                document.getElementById('total-revenue').textContent = '$0';
+                document.getElementById('avg-period').textContent = '$0';
+                document.getElementById('growth-rate').textContent = '0%';
+                return;
+            }
+
             const chartData = [
                 ['Period', 'Revenue']
             ];
@@ -488,44 +520,6 @@
             }
         }
 
-        function drawEmptyChart(viewType) {
-            const emptyData = [];
-
-            if (viewType === 'weekly') {
-                for (let i = 1; i <= 4; i++) {
-                    emptyData.push({
-                        period: `Week ${i}`,
-                        revenue: 0
-                    });
-                }
-            } else {
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                monthNames.forEach(month => {
-                    emptyData.push({
-                        period: month,
-                        revenue: 0
-                    });
-                });
-            }
-
-            drawRevenueChart(emptyData);
-
-            // Show error message
-            const chartContainer = document.getElementById('revenue_chart');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90';
-            errorDiv.innerHTML = `
-                <div class="text-center text-gray-600">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.96-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                    <p class="mt-2">Unable to load revenue data</p>
-                    <p class="text-sm">Please check your connection and try again</p>
-                </div>
-            `;
-            chartContainer.appendChild(errorDiv);
-        }
-
         // Refresh chart on window resize
         window.addEventListener('resize', function() {
             if (revenueChart) {
@@ -533,9 +527,7 @@
             }
         });
     </script>
-@endsection
 
-@section('scripts')
     <script>
         lucide.createIcons();
     </script>

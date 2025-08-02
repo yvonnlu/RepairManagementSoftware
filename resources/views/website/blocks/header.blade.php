@@ -6,39 +6,39 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
-                <div class="flex items-center space-x-3">
+                <a href="/home" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                     <div
                         class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                         <i data-lucide="settings" class="w-6 h-6 text-white"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900">TechFix Pro</h1>
+                        <h1 class="text-xl font-bold text-gray-900">Fixicon</h1>
                         <p class="text-xs text-gray-500">Professional Repair</p>
                     </div>
-                </div>
+                </a>
 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <button onclick="scrollToSection('home')"
+                    <a href="/home#home"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Home
-                    </button>
-                    <button onclick="scrollToSection('services')"
+                    </a>
+                    <a href="/home#services"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Services
-                    </button>
-                    <button onclick="scrollToSection('features')"
+                    </a>
+                    <a href="/home#features"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Features
-                    </button>
-                    <button onclick="scrollToSection('testimonials')"
+                    </a>
+                    <a href="/home#testimonials"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Reviews
-                    </button>
-                    <button onclick="scrollToSection('contact')"
+                    </a>
+                    <a href="/home#contact"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Contact
-                    </button>
+                    </a>
                     <a href="{{ route('cart.index') }}"
                         class="relative text-gray-700 hover:text-blue-600 transition-colors">
                         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
@@ -47,10 +47,6 @@
                             {{ session('cart') ? array_sum(array_column(session('cart'), 'qty')) : 0 }}
                         </span>
                     </a>
-                    <button onclick="scrollToSection('contact')"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                        Book Now
-                    </button>
                     <!-- User Auth Section -->
                     @if (Auth::check())
                         <div class="relative group">
@@ -111,26 +107,26 @@
         <!-- Mobile Navigation -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
             <div class="container mx-auto px-4 py-4 space-y-4">
-                <button onclick="scrollToSection('home')"
+                <a href="/home#home"
                     class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Home
-                </button>
-                <button onclick="scrollToSection('services')"
+                </a>
+                <a href="/home#services"
                     class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Services
-                </button>
-                <button onclick="scrollToSection('features')"
+                </a>
+                <a href="/home#features"
                     class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Features
-                </button>
-                <button onclick="scrollToSection('testimonials')"
+                </a>
+                <a href="/home#testimonials"
                     class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Reviews
-                </button>
-                <button onclick="scrollToSection('contact')"
+                </a>
+                <a href="/home#contact"
                     class="block w-full text-left text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
                     Contact
-                </button>
+                </a>
                 <a href="{{ route('cart.index') }}"
                     class="relative inline-block text-gray-700 hover:text-blue-600 transition-colors">
                     <div class="flex items-center space-x-2">
@@ -140,10 +136,10 @@
                             class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
                     </div>
                 </a>
-                <button onclick="scrollToSection('contact')"
+                {{-- <button onclick="scrollToSection('contact')"
                     class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mt-4">
                     Book Now
-                </button>
+                </button> --}}
             </div>
         </div>
     </nav>

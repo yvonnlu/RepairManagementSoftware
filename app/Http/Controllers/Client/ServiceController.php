@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Services;
+use App\Services\SEOService;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -31,12 +32,27 @@ class ServiceController extends Controller
 
         $cart = session('cart', []);
 
-        return view('website.pages.service', [
+        // Generate SEO data
+        $seo = SEOService::generateMetaTags('services');
+
+        return view('website.pages.services.service', [
             'services'        => $services,
             'deviceTypes'     => $deviceTypes,
             'selectedType'    => $selectedType,
             'servicesByDevice' => $servicesByDevice,
             'cart'            => $cart,
+            'seo'             => $seo,
+        ]);
+    }
+
+    public function show(Services $service)
+    {
+        // Generate SEO data for service detail
+        $seo = SEOService::generateMetaTags('service_detail', ['service' => $service]);
+
+        return view('website.pages.services.service-detail', [
+            'service' => $service,
+            'seo'     => $seo,
         ]);
     }
 }

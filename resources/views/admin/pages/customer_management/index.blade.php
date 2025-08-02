@@ -15,7 +15,21 @@
             </a>
         </div>
 
-        <x-alert />
+        <!-- Success Notification -->
+        @if (session('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Success!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.586 8.586l-2.934 2.934a1 1 0 101.414 1.414L10 9.828l2.934 2.934a1 1 0 001.414-1.414L11.414 8.586l2.934-2.934z" />
+                    </svg>
+                </span>
+            </div>
+        @endif
 
         <!-- Search and Filter -->
         <div class="bg-white p-6 rounded-lg shadow-sm border">
@@ -121,11 +135,11 @@
                                             <!-- Restore button for deleted users -->
                                             <form method="POST"
                                                 action="{{ route('admin.customer.restore', $customer->id) }}"
-                                                class="inline"
-                                                onsubmit="return confirm('Are you sure you want to restore {{ $customer->name }}?')">
+                                                class="inline" id="restore-form-{{ $customer->id }}">
                                                 @csrf
-                                                <button type="submit" class="text-green-600 hover:text-green-800"
-                                                    title="Restore">
+                                                <button type="button"
+                                                    onclick="confirmRestore('{{ $customer->name }}', function() { document.getElementById('restore-form-{{ $customer->id }}').submit(); })"
+                                                    class="text-green-600 hover:text-green-800" title="Restore">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -139,12 +153,12 @@
                                             <!-- Delete button for active users -->
                                             <form method="POST"
                                                 action="{{ route('admin.customer.destroy', $customer->id) }}"
-                                                class="inline"
-                                                onsubmit="return confirm('Are you sure you want to delete {{ $customer->name }}?')">
+                                                class="inline" id="delete-form-{{ $customer->id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-800"
-                                                    title="Delete">
+                                                <button type="button"
+                                                    onclick="confirmDelete('{{ $customer->name }}', function() { document.getElementById('delete-form-{{ $customer->id }}').submit(); })"
+                                                    class="text-red-600 hover:text-red-800" title="Delete">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"

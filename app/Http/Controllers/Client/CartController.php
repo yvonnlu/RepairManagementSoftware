@@ -79,15 +79,12 @@ class CartController extends Controller
         }
         // Pass description to view for user feedback
         if ($vnp_ResponseCode === '00') {
-            return view('website.pages.order_success', [
-                'message' => $description,
-                'payment_method' => 'vnpay',
+            return view('website.pages.orders.order_success', [
+                'order' => $order
             ]);
         } else {
-            return view('website.pages.order_failed', [
-                'error' => $description,
-                'vnp_ResponseCode' => $vnp_ResponseCode,
-                'payment_method' => 'vnpay',
+            return view('website.pages.orders.order_failed', [
+                'message' => 'Order not found or payment verification failed'
             ]);
         }
     }
@@ -95,16 +92,9 @@ class CartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-        return view('website.pages.cart', ['cart' => $cart]);
+        return view('website.pages.cart.cart', ['cart' => $cart]);
     }
 
-    // public function checkout()
-    // {
-    //     $user = Auth::user();
-    //     $cart = session()->get('cart');
-
-    //     return view('website.pages.checkout', ['user' => $user, 'cart' => $cart]);
-    // }
     public function checkout(Request $request)
     {
         $user = Auth::user();
@@ -124,9 +114,9 @@ class CartController extends Controller
         }
 
         if (empty($cart)) {
-            return view('website.pages.empty_cart');
+            return view('website.pages.cart.empty_cart');
         }
-        return view('website.pages.checkout', ['user' => $user, 'cart' => $cart]);
+        return view('website.pages.orders.checkout', ['user' => $user, 'cart' => $cart]);
     }
 
     public function addServiceToCart(Services $service)
@@ -236,7 +226,7 @@ class CartController extends Controller
             // Early exit if still no cart
             if (empty($cart)) {
                 DB::rollBack();
-                return view('website.pages.empty_cart');
+                return view('website.pages.cart.empty_cart');
             }
             foreach ($cart as $item) {
                 $total += $item['price'] * $item['qty'];
@@ -307,22 +297,13 @@ class CartController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Order failed: ' . $e->getMessage());
-            return view('website.pages.order_failed', ['error' => $e->getMessage()]);
+            return view('website.pages.orders.order_failed', ['error' => $e->getMessage()]);
         }
 
         // For COD, show order_success with correct heading
-        return view('website.pages.order_success', [
+        return view('website.pages.orders.order_success', [
             'message' => 'Your order has been placed successfully.',
             'payment_method' => 'cod',
-        ]);
-    }
-
-    // Trang thông tin khách hàng
-    public function profileShow()
-    {
-        $user = Auth::user();
-        return view('client.pages.profile', [
-            'user' => $user,
         ]);
     }
 
@@ -346,7 +327,8 @@ class CartController extends Controller
                 'updated_at' => $order->updated_at,
                 'device_type_name' => $deviceType,
                 'issue_category_name' => $issueCategory,
-                'order_step' => $order->order_step ?? $order->status,
+                'service_step' => $order->service_step ?? 'Not Started',
+                'payment_status' => $order->status ?? 'Pending',
                 'total' => $order->total,
             ];
         }
@@ -410,7 +392,7 @@ class CartController extends Controller
             ]);
 
             // Fallback to order success page with error message
-            return view('website.pages.order_failed', [
+            return view('website.pages.orders.order_failed', [
                 'error' => 'Payment gateway error. Please try again or contact support.',
                 'payment_method' => 'vnpay',
             ]);
