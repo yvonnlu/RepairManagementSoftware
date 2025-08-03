@@ -17,7 +17,8 @@ class Services extends Model
         'description',
         'base_price',
         'device_type_name',
-        'image'
+        'image',
+        'slug'
     ];
 
     // Accessor for image URL
@@ -76,5 +77,33 @@ class Services extends Model
     public function getImageNameAttribute()
     {
         return $this->image;
+    }
+
+    // Generate slug from device type and issue category
+    public function generateSlug()
+    {
+        return strtolower(str_replace(' ', '-', $this->device_type_name . '-' . $this->issue_category_name));
+    }
+
+    // Get or generate slug
+    public function getSlugAttribute($value)
+    {
+        if (empty($value)) {
+            // Nếu database chưa có slug → tạo mới
+            return $this->generateSlug();
+        }
+        // Nếu database đã có slug → dùng luôn
+        return $value;
+    }
+
+    // Update slug when saving
+    public function save(array $options = [])
+    {
+        // Auto-generate slug if empty or fields changed
+        if (empty($this->slug) || $this->isDirty(['device_type_name', 'issue_category_name'])) {
+            $this->slug = $this->generateSlug();
+        }
+
+        return parent::save($options);
     }
 }

@@ -1,12 +1,29 @@
 @extends('website.layout.app')
 @section('content')
     <div class="container mx-auto px-4 py-12 mt-20">
+        <!-- Back to Services Link -->
+        <div class="mb-8">
+            <a href="{{ route('service.index') }}"
+                class="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                <span>Back to Services</span>
+            </a>
+        </div>
+
+        <!-- Page Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Checkout</h1>
+            <p class="text-gray-600">Complete your order information</p>
+        </div>
 
         {{-- <form id="checkout-form" method="POST" action="{{ route('checkout.submit') }}"> --}}
         <form action="{{ route('cart.place-order') }}" method="post">
             @csrf
             @if (request()->has('service_id'))
                 <input type="hidden" name="service_id" value="{{ request('service_id') }}">
+            @endif
+            @if (request()->has('order_id') || isset($existingOrderId))
+                <input type="hidden" name="existing_order_id" value="{{ request('order_id') ?? $existingOrderId }}">
             @endif
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Customer Info -->

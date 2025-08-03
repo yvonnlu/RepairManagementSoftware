@@ -26,6 +26,7 @@ class ServicesStoreRequest extends FormRequest
             'issue_category_name' => 'required|string|min:3|max:255',
             'description' => 'required|string|min:10|max:1000',
             'base_price' => 'required|numeric|min:0',
+            'slug' => 'nullable|string|max:255|regex:/^[a-z0-9\-]+$/|unique:services,slug',
         ];
     }
 
@@ -49,7 +50,12 @@ class ServicesStoreRequest extends FormRequest
 
             'base_price.required' => 'Service price is required.',
             'base_price.numeric' => 'Service price must be a number.',
-            'base_price.min' => 'Service price must be at least 0.',   
+            'base_price.min' => 'Service price must be at least 0.',
+
+            'slug.string' => 'Slug must be a string.',
+            'slug.max' => 'Slug may not be greater than 255 characters.',
+            'slug.regex' => 'Slug must contain only lowercase letters, numbers, and hyphens.',
+            'slug.unique' => 'This slug is already taken. Please use a different one.',
         ];
     }
 }

@@ -89,13 +89,13 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Payment Method</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Payment Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Service Step</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Created Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Deleted Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Action</th>
                         </tr>
@@ -113,7 +113,47 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     ${{ number_format($order->total ?? 0, 2) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $order->orderPaymentMethod->method ?? '-' }}</td>
+                                    @if ($order->orderPaymentMethod)
+                                        @php
+                                            $paymentMethod = $order->orderPaymentMethod->payment_method;
+                                            $paymentDisplay = match ($paymentMethod) {
+                                                'vnpay' => 'VNPay',
+                                                'cod' => 'Cash on Delivery',
+                                                default => ucfirst($paymentMethod),
+                                            };
+                                            $paymentClass = match ($paymentMethod) {
+                                                'vnpay' => 'bg-blue-100 text-blue-800',
+                                                'cod' => 'bg-green-100 text-green-800',
+                                                default => 'bg-gray-100 text-gray-800',
+                                            };
+                                        @endphp
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $paymentClass }}">
+                                            {{ $paymentDisplay }}
+                                        </span>
+                                    @else
+                                        <span class="text-gray-400">-</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @php
+                                        $paymentStatus = $order->status;
+                                        $statusDisplay = match ($paymentStatus) {
+                                            'pending', '0' => 'Pending',
+                                            'success', '1' => 'Paid',
+                                            default => ucfirst($paymentStatus ?? 'Unknown'),
+                                        };
+                                        $statusClass = match ($paymentStatus) {
+                                            'pending', '0' => 'bg-yellow-100 text-yellow-800',
+                                            'success', '1' => 'bg-green-100 text-green-800',
+                                            default => 'bg-gray-100 text-gray-800',
+                                        };
+                                    @endphp
+                                    <span
+                                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $statusClass }}">
+                                        {{ $statusDisplay }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     @php
                                         $stepClasses = [
@@ -138,18 +178,6 @@
                                         <span class="text-red-600">{{ $order->deleted_at->format('d/m/Y H:i') }}</span>
                                     @else
                                         <span class="text-gray-400">-</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    @if ($order->deleted_at)
-                                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                            Deleted
-                                        </span>
-                                    @else
-                                        <span
-                                            class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Active
-                                        </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -206,7 +234,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="11" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="10" class="px-6 py-4 text-center text-gray-500">
                                     No orders found
                                 </td>
                             </tr>

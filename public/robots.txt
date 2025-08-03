@@ -2,16 +2,19 @@ User-agent: *
 
 # Allow crawling of main pages
 Allow: /
+Allow: /home
 Allow: /services
-Allow: /services/*
-Allow: /about
-Allow: /contact
+Allow: /service/*
 
 # Block admin and private areas
 Disallow: /admin/
 Disallow: /admin/*
 Disallow: /client/
 Disallow: /client/*
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile
+Disallow: /dashboard
 Disallow: /login
 Disallow: /register
 Disallow: /password/

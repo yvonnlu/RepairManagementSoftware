@@ -115,10 +115,38 @@
                         </div>
                     </div>
 
-                    {{-- Description Field --}}
+                    {{-- Slug Field --}}
                     <div class="space-y-3">
                         <label class="flex items-center gap-2 text-slate-700 font-semibold">
                             <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            SEO Slug
+                        </label>
+                        <div class="relative">
+                            <input type="text" name="slug" value="{{ old('slug') }}"
+                                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 font-medium"
+                                placeholder="auto-generated-slug">
+                            <button type="button" id="generate-slug-btn"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors">
+                                Auto Generate
+                            </button>
+                            @error('slug')
+                                <div class="text-red-500">{{ $message }}</div>
+                            @enderror
+                            <div class="text-sm text-slate-500 mt-1">
+                                URL-friendly version for SEO: <strong>/service/<span
+                                        id="slug-preview">your-slug-here</span></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Description Field --}}
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-2 text-slate-700 font-semibold">
+                            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <rect x="4" y="4" width="16" height="16" rx="2" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 8h8M8 12h8M8 16h4" />
@@ -174,6 +202,41 @@
 
             // Cập nhật mỗi lần gõ
             textarea.addEventListener('input', updateCharCount);
+
+            // Auto-generate slug functionality
+            document.getElementById('generate-slug-btn').addEventListener('click', function() {
+                const deviceType = document.querySelector('input[name="device_type_name"]').value;
+                const issueCategory = document.querySelector('input[name="issue_category_name"]').value;
+
+                if (deviceType && issueCategory) {
+                    // Generate slug: convert to lowercase, replace spaces with hyphens
+                    const slug = (deviceType + ' ' + issueCategory)
+                        .toLowerCase()
+                        .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+                        .replace(/\s+/g, '-') // Replace spaces with hyphens
+                        .replace(/-+/g, '-') // Replace multiple hyphens with single
+                        .trim();
+
+                    document.querySelector('input[name="slug"]').value = slug;
+
+                    // Update preview URL
+                    const previewElement = document.getElementById('slug-preview');
+                    if (previewElement) {
+                        previewElement.textContent = slug;
+                    }
+                } else {
+                    alert('Please fill in Device Type and Issue Category first');
+                }
+            });
+
+            // Auto-update slug preview when typing
+            document.querySelector('input[name="slug"]').addEventListener('input', function() {
+                const slug = this.value;
+                const previewElement = document.getElementById('slug-preview');
+                if (previewElement) {
+                    previewElement.textContent = slug || 'your-slug-here';
+                }
+            });
         });
     </script>
 

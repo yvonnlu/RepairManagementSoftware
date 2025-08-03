@@ -142,24 +142,25 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-12">
                     @foreach ($serviceList as $service)
                         <div
-                            class="service-card bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                            class="service-card bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
                             <!-- Ultra Large Service Image -->
                             <div
-                                class="service-image relative h-80 md:h-96 lg:h-[28rem] bg-gradient-to-br from-blue-100 to-blue-200">
+                                class="service-image relative h-80 md:h-96 lg:h-[28rem] bg-gradient-to-br from-blue-100 to-blue-200 flex-shrink-0">
                                 @if ($service->image_url)
-                                    <img src="{{ $service->image_url }}" 
-                                         alt="{{ $service->device_type_name }} {{ $service->issue_category_name }} repair service - Professional {{ $service->issue_category_name }} fix"
-                                         title="{{ $service->device_type_name }} {{ $service->issue_category_name }} Repair"
-                                         class="w-full h-full object-contain p-4"
-                                         loading="lazy"
-                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <img src="{{ $service->image_url }}"
+                                        alt="{{ $service->device_type_name }} {{ $service->issue_category_name }} repair service - Professional {{ $service->issue_category_name }} fix"
+                                        title="{{ $service->device_type_name }} {{ $service->issue_category_name }} Repair"
+                                        class="w-full h-full object-contain p-4" loading="lazy"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                     <div style="display: none;"
                                         class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
-                                        <i data-lucide="{{ $service->default_icon }}" class="w-20 h-20 text-blue-600" title="{{ $service->issue_category_name }} repair icon"></i>
+                                        <i data-lucide="{{ $service->default_icon }}" class="w-20 h-20 text-blue-600"
+                                            title="{{ $service->issue_category_name }} repair icon"></i>
                                     </div>
                                 @else
                                     <div class="w-full h-full flex items-center justify-center">
-                                        <i data-lucide="{{ $service->default_icon }}" class="w-20 h-20 text-blue-600" title="{{ $service->issue_category_name }} repair service"></i>
+                                        <i data-lucide="{{ $service->default_icon }}" class="w-20 h-20 text-blue-600"
+                                            title="{{ $service->issue_category_name }} repair service"></i>
                                     </div>
                                 @endif
 
@@ -181,9 +182,10 @@
                             </div>
 
                             <!-- Card Content -->
-                            <div class="p-6">
+                            <div class="p-6 flex flex-col flex-grow">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $service->issue_category_name }}</h3>
-                                <p class="text-gray-600 mb-4 leading-relaxed line-clamp-3">{{ $service->description }}</p>
+                                <p class="text-gray-600 mb-4 leading-relaxed line-clamp-3 flex-grow">
+                                    {{ $service->description }}</p>
 
                                 <!-- Service Features -->
                                 <div class="flex items-center justify-between mb-4 text-sm text-gray-500">
@@ -197,8 +199,19 @@
                                     </div>
                                 </div>
 
+                                <!-- View Details Link -->
+                                <div class="mb-4">
+                                    <a href="{{ route('service.detail', $service->slug) }}"
+                                        class="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1 group">
+                                        <i data-lucide="eye" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                                        <span>View Details</span>
+                                        <i data-lucide="arrow-right"
+                                            class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                                    </a>
+                                </div>
+
                                 <!-- Action Buttons -->
-                                <div class="flex flex-col sm:flex-row gap-3">
+                                <div class="flex flex-col sm:flex-row gap-3 mt-auto">
                                     <a href="{{ route('payment.index', ['service_id' => $service->id]) }}"
                                         class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
                                         <i data-lucide="credit-card" class="w-4 h-4"></i>

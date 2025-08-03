@@ -99,7 +99,9 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $serviceId = $request->query('service_id');
+
         if ($serviceId) {
+            // Handle single service checkout
             $service = Services::findOrFail($serviceId);
             $cart = [
                 $service->id => [
@@ -110,13 +112,18 @@ class CartController extends Controller
                 ]
             ];
         } else {
+            // Handle cart checkout
             $cart = session()->get('cart', []);
         }
 
         if (empty($cart)) {
             return view('website.pages.cart.empty_cart');
         }
-        return view('website.pages.orders.checkout', ['user' => $user, 'cart' => $cart]);
+
+        return view('website.pages.orders.checkout', [
+            'user' => $user,
+            'cart' => $cart
+        ]);
     }
 
     public function addServiceToCart(Services $service)
@@ -312,7 +319,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $orders = Order::where('user_id', $user->id)
-            ->with(['orderItems.product'])
+            ->with(['orderItems.product', 'orderPaymentMethod'])
             ->orderByDesc('created_at')
             ->get();
 
@@ -323,12 +330,14 @@ class CartController extends Controller
             $deviceType = $mainItem && $mainItem->product ? $mainItem->product->device_type_name ?? '' : '';
             $issueCategory = $mainItem && $mainItem->product ? $mainItem->product->issue_category_name ?? '' : '';
             $orderList[] = [
+                'id' => $order->id,
                 'stt' => $stt++,
                 'updated_at' => $order->updated_at,
                 'device_type_name' => $deviceType,
                 'issue_category_name' => $issueCategory,
                 'service_step' => $order->service_step ?? 'Not Started',
                 'payment_status' => $order->status ?? 'Pending',
+                'payment_method' => $order->orderPaymentMethod->payment_method ?? 'Not Set',
                 'total' => $order->total,
             ];
         }

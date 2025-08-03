@@ -68,6 +68,13 @@ class ServicesController extends Controller
         $service->issue_category_name = $request->issue_category_name;
         $service->base_price = $request->base_price;
         $service->description = $request->description;
+
+        // Handle slug - use manual input or auto-generate
+        if ($request->filled('slug')) {
+            $service->slug = $request->slug;
+        }
+        // If slug is empty, our model's save() method will auto-generate it
+
         $service->save();
 
         return redirect()->route('admin.service.index')->with('success', 'Service updated successfully!');
@@ -80,6 +87,13 @@ class ServicesController extends Controller
         $service->issue_category_name = $request->issue_category_name;
         $service->base_price = $request->base_price;
         $service->description = $request->description;
+
+        // Handle slug - use manual input or auto-generate
+        if ($request->filled('slug')) {
+            $service->slug = $request->slug;
+        }
+        // If slug is empty, our model's save() method will auto-generate it
+
         $check = $service->save();
 
         return redirect()

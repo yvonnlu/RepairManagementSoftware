@@ -223,19 +223,23 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Expert smartphone repair services for all major brands. We use genuine parts and provide comprehensive warranty coverage.
+                                        Expert smartphone repair services for all major brands. We use genuine parts and
+                                        provide comprehensive warranty coverage.
                                     </p>
                                     <!-- Supported Brands -->
                                     <div class="mb-4">
                                         <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
                                         <div class="flex items-center space-x-4">
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Apple</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Samsung</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Xiaomi</span>
                                             </div>
                                         </div>
@@ -285,19 +289,23 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Professional tablet repair services for major tablet brands. Specialized in touchscreen and display issues.
+                                        Professional tablet repair services for major tablet brands. Specialized in
+                                        touchscreen and display issues.
                                     </p>
                                     <!-- Supported Brands -->
                                     <div class="mb-4">
                                         <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
                                         <div class="flex items-center space-x-4">
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">iPad</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Samsung</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Huawei</span>
                                             </div>
                                         </div>
@@ -347,19 +355,23 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Comprehensive repair services for desktop computers and laptops. From hardware diagnostics to performance optimization.
+                                        Comprehensive repair services for desktop computers and laptops. From hardware
+                                        diagnostics to performance optimization.
                                     </p>
                                     <!-- Supported Brands -->
                                     <div class="mb-4">
                                         <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
                                         <div class="flex items-center space-x-4">
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Apple</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Dell</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">HP</span>
                                             </div>
                                         </div>
@@ -409,19 +421,23 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mb-4 leading-relaxed">
-                                        Expert repair services for smartwatch devices and wearable technology. Specialized in screen and functionality restoration.
+                                        Expert repair services for smartwatch devices and wearable technology. Specialized
+                                        in screen and functionality restoration.
                                     </p>
                                     <!-- Supported Brands -->
                                     <div class="mb-4">
                                         <h4 class="text-sm font-semibold text-gray-800 mb-2">Supported Brands:</h4>
                                         <div class="flex items-center space-x-4">
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Apple Watch</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Samsung</span>
                                             </div>
-                                            <div class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
+                                            <div
+                                                class="flex items-center space-x-1 text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                                                 <span class="font-medium">Garmin</span>
                                             </div>
                                         </div>

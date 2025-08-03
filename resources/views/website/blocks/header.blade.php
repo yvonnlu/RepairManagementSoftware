@@ -19,24 +19,20 @@
 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="/home#home"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                    <a href="/home#home" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Home
                     </a>
-                    <a href="/home#services"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                    <a href="/home#services" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Services
                     </a>
-                    <a href="/home#features"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                    <a href="/home#features" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Features
                     </a>
                     <a href="/home#testimonials"
                         class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Reviews
                     </a>
-                    <a href="/home#contact"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                    <a href="/home#contact" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                         Contact
                     </a>
                     <a href="{{ route('cart.index') }}"

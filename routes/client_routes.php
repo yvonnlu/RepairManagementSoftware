@@ -17,6 +17,7 @@ Route::get('google/callback', [GoogleController::class, 'callback'])->name('clie
 
 Route::get('client/profile', [ProfileController::class, 'show'])->name('client.profile')->middleware(CheckIsClient::class);
 Route::post('client/profile/update', [ProfileController::class, 'update'])->name('client.profile.update')->middleware(CheckIsClient::class);
+Route::delete('client/profile', [ProfileController::class, 'destroy'])->name('client.profile.destroy')->middleware(CheckIsClient::class);
 Route::get('client/orders', [CartController::class, 'orderShow'])->name('client.orders')->middleware(CheckIsClient::class);
 
 
@@ -34,6 +35,7 @@ Route::get('client/trackorder', function () {
 
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
 Route::get('services', [ServiceController::class, 'index'])->name('service.index');
+Route::get('service/{service:slug}', [ServiceController::class, 'detail'])->name('service.detail');
 Route::get('checkout', [CartController::class, 'checkout'])->name('payment.index')->middleware('auth');
 Route::post('place-order', [CartController::class, 'placeOrder'])->name('cart.place-order')->middleware('auth');
 
