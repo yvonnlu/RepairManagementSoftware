@@ -152,6 +152,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // Skip adding confirm dialog to View Details links
         }
 
+        // Skip eye icon links (check for eye icon inside the link)
+        const hasEyeIcon = link.querySelector('i[data-lucide="eye"]');
+        if (hasEyeIcon) {
+            return; // Skip adding confirm dialog to eye icon links
+        }
+
         // Check if this might be a detail/edit link that could show localhost in development
         if (originalHref && (originalHref.includes('detail') || originalHref.includes('show') || originalHref.includes('edit'))) {
             link.addEventListener('click', function (e) {

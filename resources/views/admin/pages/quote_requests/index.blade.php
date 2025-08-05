@@ -192,7 +192,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center gap-2">
                                         <a href="{{ route('admin.quote-requests.detail', $request) }}"
-                                            class="text-blue-600 hover:text-blue-900 transition-colors">
+                                            class="text-blue-600 hover:text-blue-900 transition-colors"
+                                            title="View Details">
                                             <i data-lucide="eye" class="w-4 h-4"></i>
                                         </a>
 

@@ -169,7 +169,7 @@
                             <a href="{{ route('payment.index', ['service_id' => $service->id]) }}"
                                 class="bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-lg">
                                 <i data-lucide="credit-card" class="w-5 h-5"></i>
-                                <span>Book Now</span>
+                                <span>Order Now</span>
                             </a>
                             <button data-url="{{ route('cart.add-service-to-cart', ['service' => $service->id]) }}"
                                 data-service-id="{{ $service->id }}"

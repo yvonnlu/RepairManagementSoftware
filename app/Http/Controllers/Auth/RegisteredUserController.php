@@ -31,9 +31,26 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        // Check if email exists (including soft deleted users)
+        $existingUser = User::withTrashed()->where('email', $request->email)->first();
+
+        if ($existingUser) {
+            if ($existingUser->trashed()) {
+                // User exists but is soft deleted
+                return back()->withErrors([
+                    'email' => 'This email address is associated with a deactivated account. Please contact our support team at support@fixicon.com or call (555) 123-4567 to reactivate your account.'
+                ])->withInput();
+            } else {
+                // User exists and is active
+                return back()->withErrors([
+                    'email' => 'This email address is already registered. Please try logging in instead.'
+                ])->withInput();
+            }
+        }
 
         $user = User::create([
             'name' => $request->name,

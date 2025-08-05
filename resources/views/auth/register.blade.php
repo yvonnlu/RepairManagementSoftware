@@ -251,6 +251,35 @@
                         </a>
                     </p>
                 </div>
+
+                {{-- Support Contact Info --}}
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mt-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-blue-900 mb-1">Need help with your account?</h4>
+                            <p class="text-xs text-blue-700 mb-2">If you're having trouble accessing your account or need
+                                assistance, our support team is here to help.</p>
+                            <div class="space-y-1">
+                                <p class="text-xs text-blue-800">
+                                    <span class="font-medium">Email:</span>
+                                    <a href="mailto:support@fixicon.com" class="hover:underline">support@fixicon.com</a>
+                                </p>
+                                <p class="text-xs text-blue-800">
+                                    <span class="font-medium">Phone:</span>
+                                    <a href="tel:+15551234567" class="hover:underline">(555) 123-4567</a>
+                                </p>
+                                <p class="text-xs text-blue-700">Available Monday-Friday, 9 AM - 6 PM EST</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Footer --}}

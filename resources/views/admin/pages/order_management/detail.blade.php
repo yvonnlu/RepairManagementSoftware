@@ -255,51 +255,5 @@
             </div>
         @endif
 
-        <!-- Additional Order Details -->
-        <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Order Timeline/Notes -->
-            <div class="bg-gray-50 p-6 rounded-lg">
-                <h2 class="text-lg font-semibold mb-4">Order Notes</h2>
-                @if ($order->note)
-                    <p class="text-gray-700">{{ $order->note }}</p>
-                @else
-                    <p class="text-gray-500 italic">No notes available</p>
-                @endif
-            </div>
-
-            <!-- Service Details -->
-            <div class="bg-gray-50 p-6 rounded-lg">
-                <h2 class="text-lg font-semibold mb-4">Service Details</h2>
-                <div class="space-y-2">
-                    @if ($order->device_type)
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Device Type:</span>
-                            <span class="font-medium">{{ $order->device_type }}</span>
-                        </div>
-                    @endif
-                    @if ($order->device_model)
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Device Model:</span>
-                            <span class="font-medium">{{ $order->device_model }}</span>
-                        </div>
-                    @endif
-                    @if ($order->issue_description)
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Issue:</span>
-                            <span class="font-medium">{{ $order->issue_description }}</span>
-                        </div>
-                    @endif
-                    @if ($order->estimated_completion)
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Estimated Completion:</span>
-                            <span
-                                class="font-medium">{{ \Carbon\Carbon::parse($order->estimated_completion)->format('d/m/Y') }}</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-
     </div>
 @endsection

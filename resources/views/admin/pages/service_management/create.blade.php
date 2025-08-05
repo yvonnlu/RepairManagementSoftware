@@ -123,6 +123,7 @@
                                     d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
                             SEO Slug
+                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Auto-generated</span>
                         </label>
                         <div class="relative">
                             <input type="text" name="slug" value="{{ old('slug') }}"
@@ -130,14 +131,21 @@
                                 placeholder="auto-generated-slug">
                             <button type="button" id="generate-slug-btn"
                                 class="absolute right-3 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors">
-                                Auto Generate
+                                Refresh
                             </button>
                             @error('slug')
                                 <div class="text-red-500">{{ $message }}</div>
                             @enderror
                             <div class="text-sm text-slate-500 mt-1">
-                                URL-friendly version for SEO: <strong>/service/<span
-                                        id="slug-preview">your-slug-here</span></strong>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <span>Auto-updates as you type</span>
+                                </span>
+                                URL preview: <strong>/service/<span id="slug-preview">your-slug-here</span></strong>
                             </div>
                         </div>
                     </div>
@@ -203,27 +211,57 @@
             // Cập nhật mỗi lần gõ
             textarea.addEventListener('input', updateCharCount);
 
-            // Auto-generate slug functionality
+            // Auto-generate slug functionality with debounce
+            let slugTimeout;
+
+            function generateSlugFromInputs() {
+                clearTimeout(slugTimeout);
+                slugTimeout = setTimeout(() => {
+                    const deviceType = document.querySelector('input[name="device_type_name"]').value;
+                    const issueCategory = document.querySelector('input[name="issue_category_name"]').value;
+
+                    if (deviceType || issueCategory) {
+                        // Generate slug: convert to lowercase, replace spaces with hyphens
+                        const slug = (deviceType + ' ' + issueCategory)
+                            .toLowerCase()
+                            .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+                            .replace(/\s+/g, '-') // Replace spaces with hyphens
+                            .replace(/-+/g, '-') // Replace multiple hyphens with single
+                            .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+                            .trim();
+
+                        document.querySelector('input[name="slug"]').value = slug;
+
+                        // Update preview URL with animation
+                        const previewElement = document.getElementById('slug-preview');
+                        if (previewElement) {
+                            previewElement.style.transition = 'all 0.3s ease';
+                            previewElement.style.opacity = '0.5';
+                            setTimeout(() => {
+                                previewElement.textContent = slug || 'your-slug-here';
+                                previewElement.style.opacity = '1';
+                            }, 150);
+                        }
+                    }
+                }, 300); // 300ms debounce
+            }
+
+            // Auto-generate slug when typing in device type
+            document.querySelector('input[name="device_type_name"]').addEventListener('input',
+                generateSlugFromInputs);
+
+            // Auto-generate slug when typing in issue category
+            document.querySelector('input[name="issue_category_name"]').addEventListener('input',
+                generateSlugFromInputs);
+
+            // Manual generate slug button (backup option)
             document.getElementById('generate-slug-btn').addEventListener('click', function() {
                 const deviceType = document.querySelector('input[name="device_type_name"]').value;
                 const issueCategory = document.querySelector('input[name="issue_category_name"]').value;
 
                 if (deviceType && issueCategory) {
-                    // Generate slug: convert to lowercase, replace spaces with hyphens
-                    const slug = (deviceType + ' ' + issueCategory)
-                        .toLowerCase()
-                        .replace(/[^a-z0-9\s]/g, '') // Remove special characters
-                        .replace(/\s+/g, '-') // Replace spaces with hyphens
-                        .replace(/-+/g, '-') // Replace multiple hyphens with single
-                        .trim();
-
-                    document.querySelector('input[name="slug"]').value = slug;
-
-                    // Update preview URL
-                    const previewElement = document.getElementById('slug-preview');
-                    if (previewElement) {
-                        previewElement.textContent = slug;
-                    }
+                    clearTimeout(slugTimeout); // Clear debounce
+                    generateSlugFromInputs();
                 } else {
                     alert('Please fill in Device Type and Issue Category first');
                 }

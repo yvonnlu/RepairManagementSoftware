@@ -96,7 +96,7 @@ class DashboardController extends Controller
                 'description' => 'finished repairs',
             ],
             [
-                'title' => 'Total Customers',
+                'title' => 'Total Users',
                 'value' => $totalCustomers,
                 'change' => '+3',
                 'trend' => 'up',
